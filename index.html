@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bondify ❤️</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Login Page -->
+<div id="loginPage" class="login-container">
+    <div class="login-box">
+        <h1 class="login-title">Bondify ❤️</h1>
+        <p class="login-subtitle">Welcome to Your Love Connection</p>
+        
+        <form onsubmit="handleLogin(event)">
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required placeholder="Enter your email">
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required placeholder="Enter your password">
+            </div>
+            
+            <button type="submit" class="login-btn">Login</button>
+        </form>
+    </div>
+</div>
+
+<!-- Main Content (Hidden until login) -->
+<div id="mainContent" class="main-content">
+
+<!-- Header with Streak and Profile -->
+<div class="app-header">
+    <div class="streak-container">
+        <span class="streak-label">🔥 Streak:</span>
+        <span class="streak-count" id="streakCount">0</span>
+    </div>
+    
+    <button onclick="showProfile()" class="profile-btn">👤 Profile</button>
+</div>
+
+<div class="container">
+
+    <h1 class="title">Bondify ❤️</h1>
+    <p class="subtitle">Stay Close, No Matter the Distance</p>
+
+    <div class="grid">
+
+        <div class="card" onclick="showMusic()">
+            🎵 Listen Together
+        </div>
+
+        <div class="card" onclick="showGames()">
+            🎮 Play Games
+        </div>
+
+    </div>
+
+    <!-- Music Player -->
+    <div id="musicSection" class="music-box">
+        <h2>Listen Together 🎶</h2>
+
+        <audio id="player" class="audio-player" controls></audio>
+
+        <div class="download-section">
+            <button onclick="downloadCurrentSong()" class="download-btn">⬇️ Download Current Song</button>
+        </div>
+
+        <div class="song-list">
+            <button onclick="playSong(0)">Perfect — Ed Sheeran</button>
+            <button onclick="playSong(1)">Until I Found You</button>
+            <button onclick="playSong(2)">All of Me</button>
+            <button onclick="playSong(3)">Love Me Like You Do</button>
+            <button onclick="playSong(4)">Tum Hi Ho</button>
+        </div>
+
+        <div class="add-song-section">
+            <p class="add-song-label">Add Your Own Song:</p>
+            <input type="file" id="songFile" accept="audio/*" placeholder="Choose a song file">
+            <button onclick="addCustomSong()" class="add-song-btn">Add Song</button>
+        </div>
+        
+        <button onclick="closeMusic()" class="close-btn">Close</button>
+    </div>
+
+    <!-- Games Section -->
+    <div id="gamesSection" class="music-box">
+        <h2>Couple Quiz 💕</h2>
+
+        <p class="quiz-question">Who said "I love you" first?</p>
+
+        <button class="quiz-btn" onclick="answerGame('me')">Me 😄</button>
+        <button class="quiz-btn" onclick="answerGame('partner')">Partner 😍</button>
+        
+        <button onclick="closeGames()" class="close-btn">Close</button>
+    </div>
+
+    <!-- Profile Modal -->
+    <div id="profileModal" class="profile-modal">
+        <div class="profile-content">
+            <button onclick="closeProfile()" class="profile-close">✕</button>
+            <h2>My Profile 👤</h2>
+            
+            <div class="profile-info">
+                <p><strong>Email:</strong> <span id="profileEmail"></span></p>
+                <p><strong>Streak:</strong> <span id="profileStreak">0</span> days 🔥</p>
+                <p><strong>Account Created:</strong> <span id="accountCreated"></span></p>
+                <p><strong>Last Login:</strong> <span id="lastLogin"></span></p>
+            </div>
+            
+            <button onclick="logout()" class="logout-btn">Logout</button>
+        </div>
+    </div>
+
+</div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
