@@ -4,27 +4,212 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bondify ❤️</title>
-  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --rose:  #e8647a;
+      --blush: #f9dde2;
+      --cream: #fdf6f0;
+      --deep:  #2d1b24;
+      --muted: #9b7b85;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    /* Background blobs */
+    .bg-blobs { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+    .blob {
+      position: absolute; border-radius: 50%;
+      filter: blur(80px); opacity: 0.35;
+      animation: drift 12s ease-in-out infinite alternate;
+    }
+    .blob-1 { width: 520px; height: 520px; background: #f7bcc8; top: -120px; left: -80px; animation-delay: 0s; }
+    .blob-2 { width: 400px; height: 400px; background: #f9d4a0; bottom: -80px; right: -60px; animation-delay: 3s; }
+    .blob-3 { width: 300px; height: 300px; background: #c4d9f7; top: 40%; left: 55%; animation-delay: 6s; }
+    @keyframes drift {
+      from { transform: translate(0,0) scale(1); }
+      to   { transform: translate(30px,20px) scale(1.06); }
+    }
+
+    /* Login box */
+    .login-container {
+      position: relative; z-index: 1;
+      width: 100%; max-width: 420px;
+      padding: 24px;
+      animation: slide-up 0.6s cubic-bezier(.34,1.56,.64,1) both;
+    }
+
+    .login-box {
+      background: rgba(255,255,255,0.78);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(232,100,122,0.15);
+      border-radius: 28px;
+      padding: 44px 36px;
+      box-shadow: 0 16px 64px rgba(45,27,36,0.12);
+      text-align: center;
+    }
+
+    .login-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem;
+      color: var(--deep);
+      margin-bottom: 8px;
+    }
+
+    .login-subtitle {
+      color: var(--muted);
+      font-size: 0.92rem;
+      margin-bottom: 32px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px 18px;
+      border: 1.5px solid rgba(232,100,122,0.2);
+      border-radius: 14px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      color: var(--deep);
+      background: rgba(255,255,255,0.9);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    input::placeholder { color: var(--muted); }
+
+    input:focus {
+      border-color: var(--rose);
+      box-shadow: 0 0 0 4px rgba(232,100,122,0.12);
+    }
+
+    .login-btn {
+      margin-top: 6px;
+      padding: 14px;
+      background: var(--rose);
+      color: #fff;
+      border: none;
+      border-radius: 14px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .login-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(232,100,122,0.4);
+    }
+
+    .login-btn:active { transform: translateY(0); }
+
+    .signup-text {
+      margin-top: 20px;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .signup-text a {
+      color: var(--rose);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .signup-text a:hover { text-decoration: underline; }
+
+    /* Error message */
+    .error-msg {
+      color: var(--rose);
+      font-size: 0.83rem;
+      min-height: 18px;
+      text-align: left;
+    }
+
+    @keyframes slide-up {
+      from { opacity: 0; transform: translateY(32px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </head>
 
 <body>
 
-<div class="login-container">
+<div class="bg-blobs">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+</div>
 
+<div class="login-container">
   <div class="login-box">
     <h1 class="login-title">Bondify ❤️</h1>
     <p class="login-subtitle">Welcome to Your Love Connection</p>
 
     <form onsubmit="login(event)">
-        <input type="email" id="email" placeholder="Enter your email" required>
-        <input type="password" placeholder="Enter your password" required>
-
-        <button type="submit" class="login-btn">Login</button>
+      <input type="text" id="name" placeholder="Your name" required />
+      <input type="text" id="partnerName" placeholder="Your partner's name" required />
+      <input type="email" id="email" placeholder="Enter your email" required />
+      <input type="password" id="password" placeholder="Enter your password" required />
+      <div class="error-msg" id="errorMsg"></div>
+      <button type="submit" class="login-btn">Let's go 💕</button>
     </form>
-  </div>
 
+    <p class="signup-text">New here? <a href="#">Create an account</a></p>
+  </div>
 </div>
 
-<script src="script.js"></script>
+<script>
+  function login(event) {
+    event.preventDefault();
+
+    const name        = document.getElementById('name').value.trim();
+    const partnerName = document.getElementById('partnerName').value.trim();
+    const email       = document.getElementById('email').value.trim();
+    const password    = document.getElementById('password').value;
+    const errorMsg    = document.getElementById('errorMsg');
+
+    // Basic validation
+    if (!name || !partnerName) {
+      errorMsg.textContent = 'Please enter both names.';
+      return;
+    }
+
+    if (!email.includes('@')) {
+      errorMsg.textContent = 'Please enter a valid email.';
+      return;
+    }
+
+    if (password.length < 6) {
+      errorMsg.textContent = 'Password must be at least 6 characters.';
+      return;
+    }
+
+    errorMsg.textContent = '';
+
+    // Save names to localStorage
+    localStorage.setItem('userName', name);
+    localStorage.setItem('partnerName', partnerName);
+
+    // Go to dashboard
+    window.location.href = 'dashboard.html';
+  }
+</script>
+
 </body>
 </html>

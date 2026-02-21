@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Together — Dashboard</title>
+  <title>Bondify ❤️ — Dashboard</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -29,56 +29,150 @@
     }
 
     /* ── Background blobs ── */
-    .bg-blobs {
-      position: fixed; inset: 0; z-index: 0; pointer-events: none;
-    }
+    .bg-blobs { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
     .blob {
       position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.35;
       animation: drift 12s ease-in-out infinite alternate;
     }
-    .blob-1 { width: 520px; height: 520px; background: #f7bcc8; top: -120px; left: -80px; animation-delay: 0s; }
+    .blob-1 { width: 520px; height: 520px; background: #f7bcc8; top: -120px; left: -80px; }
     .blob-2 { width: 400px; height: 400px; background: #f9d4a0; bottom: -80px; right: -60px; animation-delay: 3s; }
     .blob-3 { width: 300px; height: 300px; background: #c4d9f7; top: 40%; left: 55%; animation-delay: 6s; }
-
     @keyframes drift {
       from { transform: translate(0,0) scale(1); }
-      to   { transform: translate(30px, 20px) scale(1.06); }
+      to   { transform: translate(30px,20px) scale(1.06); }
     }
 
     /* ── Layout ── */
     .page { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 36px 24px 60px; }
 
-    /* ── Header ── */
-    header {
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 40px; flex-wrap: wrap; gap: 16px;
+    /* ════════════════════
+       HERO SECTION
+    ════════════════════ */
+    .hero {
+      position: relative;
+      border-radius: 28px;
+      overflow: hidden;
+      margin-bottom: 32px;
+      min-height: 230px;
+      background: linear-gradient(135deg, #f9dde2 0%, #fde8c8 100%);
+      box-shadow: var(--shadow);
+      animation: slide-up 0.5s ease both;
+      display: flex; align-items: flex-end;
     }
-    .header-left h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(1.6rem, 4vw, 2.4rem);
-      color: var(--deep);
-      line-height: 1.15;
-    }
-    .header-left h1 span { color: var(--rose); font-style: italic; }
-    .header-left p { color: var(--muted); font-size: 0.9rem; margin-top: 4px; }
 
-    /* ── Streak badge ── */
-    .streak {
-      display: flex; align-items: center; gap: 10px;
-      background: var(--deep); color: #fff;
-      border-radius: 50px; padding: 10px 20px;
-      font-size: 0.9rem; font-weight: 500;
-      box-shadow: 0 4px 16px rgba(45,27,36,0.22);
-      animation: pop-in 0.6s cubic-bezier(.34,1.56,.64,1) both;
-      cursor: default;
+    /* Couple photo background */
+    .couple-bg {
+      position: absolute; inset: 0;
+      background-size: cover; background-position: center;
+      opacity: 0; transition: opacity 0.5s;
     }
-    .streak .flame { font-size: 1.3rem; animation: flicker 1.4s ease-in-out infinite alternate; }
-    .streak .count { font-family: 'Playfair Display', serif; font-size: 1.5rem; line-height: 1; }
-    .streak .label { opacity: 0.75; font-size: 0.78rem; line-height: 1; }
+    .couple-bg.loaded { opacity: 1; }
+    .couple-bg::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(45,27,36,0.65) 0%, rgba(45,27,36,0.1) 60%, transparent 100%);
+    }
+
+    /* Upload couple photo button */
+    .couple-upload-btn {
+      position: absolute; top: 14px; right: 14px; z-index: 3;
+      background: rgba(255,255,255,0.88); backdrop-filter: blur(8px);
+      border: none; border-radius: 50px;
+      padding: 8px 16px; font-family: 'DM Sans', sans-serif;
+      font-size: 0.82rem; color: var(--deep); cursor: pointer;
+      display: flex; align-items: center; gap: 6px;
+      transition: background 0.2s, transform 0.2s;
+      box-shadow: 0 2px 12px rgba(45,27,36,0.12);
+    }
+    .couple-upload-btn:hover { background: #fff; transform: translateY(-1px); }
+
+    /* Hero bottom content */
+    .hero-content {
+      position: relative; z-index: 2;
+      width: 100%; padding: 24px 28px;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 16px;
+    }
+
+    /* Avatar pair */
+    .avatar-pair { display: flex; align-items: center; }
+
+    .avatar-wrap {
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+    }
+    .avatar-wrap:first-child { margin-right: -10px; z-index: 2; }
+    .avatar-wrap:last-child  { margin-left: -10px;  z-index: 1; }
+
+    .avatar {
+      width: 76px; height: 76px; border-radius: 50%;
+      border: 3px solid rgba(255,255,255,0.9);
+      background: var(--blush);
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.9rem;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 4px 16px rgba(45,27,36,0.2);
+    }
+    .avatar:hover { transform: scale(1.08); box-shadow: 0 6px 20px rgba(45,27,36,0.3); }
+
+    .avatar img {
+      width: 100%; height: 100%; object-fit: cover;
+      position: absolute; inset: 0;
+      display: none;
+    }
+
+    /* Camera overlay on avatar hover */
+    .avatar .cam-hint {
+      position: absolute; inset: 0;
+      background: rgba(45,27,36,0.45);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem; opacity: 0; transition: opacity 0.2s;
+      border-radius: 50%;
+    }
+    .avatar:hover .cam-hint { opacity: 1; }
+
+    .avatar-name {
+      font-size: 0.75rem; font-weight: 500;
+      color: #fff; text-shadow: 0 1px 4px rgba(0,0,0,0.45);
+      white-space: nowrap;
+    }
+
+    .heart-divider {
+      font-size: 1.3rem; margin: 0 8px; padding-bottom: 22px;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.25));
+    }
+
+    /* Hero right */
+    .hero-right { text-align: right; }
+    .hero-right h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.4rem, 3.5vw, 2.1rem);
+      color: #fff;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      line-height: 1.2;
+    }
+    .hero-right h1 span { font-style: italic; color: var(--warm); }
+    .hero-right p { color: rgba(255,255,255,0.75); font-size: 0.85rem; margin-top: 4px; }
+
+    .streak-pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,0.15); backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.3);
+      color: #fff; border-radius: 50px;
+      padding: 8px 16px; margin-top: 10px;
+      font-size: 0.85rem;
+    }
+    .streak-pill .flame { animation: flicker 1.4s ease-in-out infinite alternate; display: inline-block; }
+    .streak-pill .count { font-family: 'Playfair Display', serif; font-size: 1.3rem; line-height: 1; }
     @keyframes flicker {
       from { transform: scale(1) rotate(-5deg); }
       to   { transform: scale(1.15) rotate(5deg); }
     }
+
+    /* Hidden file inputs */
+    #profileInput, #coupleInput { display: none; }
 
     /* ── Mood strip ── */
     .mood-strip {
@@ -89,10 +183,10 @@
       margin-bottom: 32px;
       backdrop-filter: blur(12px);
       box-shadow: var(--shadow);
-      animation: slide-up 0.5s 0.1s ease both;
+      animation: slide-up 0.5s 0.15s ease both;
     }
-    .mood-strip h3 { font-family: 'Playfair Display', serif; font-size: 1rem; margin-bottom: 14px; color: var(--deep); }
-    .mood-options { display: flex; gap: 12px; flex-wrap: wrap; }
+    .mood-strip h3 { font-family: 'Playfair Display', serif; font-size: 1rem; margin-bottom: 14px; }
+    .mood-options { display: flex; gap: 10px; flex-wrap: wrap; }
     .mood-btn {
       border: none; background: var(--blush); border-radius: 50px;
       padding: 8px 18px; cursor: pointer; font-family: 'DM Sans', sans-serif;
@@ -103,10 +197,42 @@
       background: var(--rose); color: #fff; transform: translateY(-2px);
       box-shadow: 0 4px 14px rgba(232,100,122,0.35);
     }
-    .mood-result {
-      margin-top: 14px; font-size: 0.88rem; color: var(--muted);
-      min-height: 20px; transition: opacity 0.3s;
+    .mood-result { margin-top: 12px; font-size: 0.88rem; color: var(--muted); min-height: 20px; }
+
+    /* ── Name strip ── */
+    .name-strip {
+      background: var(--card-bg);
+      border: 1px solid rgba(232,100,122,0.15);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin-bottom: 32px;
+      backdrop-filter: blur(12px);
+      box-shadow: var(--shadow);
+      animation: slide-up 0.5s 0.2s ease both;
     }
+    .name-strip h3 { font-family: 'Playfair Display', serif; font-size: 1rem; margin-bottom: 16px; }
+    .name-fields {
+      display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+    }
+    .name-field { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 160px; }
+    .name-field label { font-size: 0.78rem; color: var(--muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; }
+    .name-field input {
+      padding: 11px 16px;
+      border: 1.5px solid rgba(232,100,122,0.2);
+      border-radius: 12px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      color: var(--deep);
+      background: rgba(255,255,255,0.9);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .name-field input::placeholder { color: #c4aab0; }
+    .name-field input:focus {
+      border-color: var(--rose);
+      box-shadow: 0 0 0 4px rgba(232,100,122,0.12);
+    }
+    .name-heart { font-size: 1.4rem; padding-top: 22px; }
 
     /* ── Feature grid ── */
     .grid {
@@ -114,7 +240,6 @@
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: 20px;
     }
-
     .card {
       background: var(--card-bg);
       border: 1px solid rgba(232,100,122,0.12);
@@ -135,29 +260,20 @@
     }
     .card:hover { transform: translateY(-5px); box-shadow: 0 16px 48px rgba(45,27,36,0.14); }
     .card:hover::before { opacity: 1; }
-    .card:nth-child(1) { animation-delay: 0.15s; }
-    .card:nth-child(2) { animation-delay: 0.22s; }
-    .card:nth-child(3) { animation-delay: 0.29s; }
-    .card:nth-child(4) { animation-delay: 0.36s; }
-    .card:nth-child(5) { animation-delay: 0.43s; }
+    .card:nth-child(1) { animation-delay: 0.2s; }
+    .card:nth-child(2) { animation-delay: 0.27s; }
+    .card:nth-child(3) { animation-delay: 0.34s; }
+    .card:nth-child(4) { animation-delay: 0.41s; }
+    .card:nth-child(5) { animation-delay: 0.48s; }
 
     .card-icon {
-      font-size: 2.2rem;
-      width: 56px; height: 56px;
-      background: var(--blush);
-      border-radius: 16px;
-      display: grid; place-items: center;
-      transition: transform 0.3s;
+      font-size: 2.2rem; width: 56px; height: 56px;
+      background: var(--blush); border-radius: 16px;
+      display: grid; place-items: center; transition: transform 0.3s;
     }
     .card:hover .card-icon { transform: scale(1.12) rotate(-4deg); }
-
-    .card-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.25rem; color: var(--deep);
-    }
-    .card-desc {
-      font-size: 0.87rem; color: var(--muted); line-height: 1.55;
-    }
+    .card-title { font-family: 'Playfair Display', serif; font-size: 1.25rem; }
+    .card-desc  { font-size: 0.87rem; color: var(--muted); line-height: 1.55; }
     .card-action {
       margin-top: auto;
       display: inline-flex; align-items: center; gap: 6px;
@@ -165,21 +281,18 @@
     }
     .card-action svg { transition: transform 0.2s; }
     .card:hover .card-action svg { transform: translateX(4px); }
-
-    /* specific accent colours */
-    .card[data-color="video"] .card-icon { background: #ddf0fb; }
+    .card[data-color="video"]     .card-icon { background: #ddf0fb; }
     .card[data-color="questions"] .card-icon { background: #fde8c8; }
-    .card[data-color="games"] .card-icon { background: #d8f5e4; }
-    .card[data-color="music"] .card-icon { background: #ede0fb; }
-    .card[data-color="mood"] .card-icon { background: #fde2e9; }
+    .card[data-color="games"]     .card-icon { background: #d8f5e4; }
+    .card[data-color="music"]     .card-icon { background: #ede0fb; }
+    .card[data-color="streak"]    .card-icon { background: #fde2e9; }
 
-    /* ── Modal overlay ── */
+    /* ── Modal ── */
     .modal-overlay {
       position: fixed; inset: 0; z-index: 100;
       background: rgba(45,27,36,0.45); backdrop-filter: blur(6px);
       display: flex; align-items: center; justify-content: center;
-      padding: 24px;
-      opacity: 0; pointer-events: none; transition: opacity 0.3s;
+      padding: 24px; opacity: 0; pointer-events: none; transition: opacity 0.3s;
     }
     .modal-overlay.open { opacity: 1; pointer-events: all; }
     .modal {
@@ -191,7 +304,7 @@
     }
     .modal-overlay.open .modal { transform: scale(1); }
     .modal h2 { font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 10px; }
-    .modal p { color: var(--muted); font-size: 0.9rem; line-height: 1.6; margin-bottom: 20px; }
+    .modal p  { color: var(--muted); font-size: 0.9rem; line-height: 1.6; margin-bottom: 20px; }
     .modal-close {
       position: absolute; top: 16px; right: 20px;
       background: none; border: none; font-size: 1.4rem;
@@ -205,56 +318,39 @@
       cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
     }
     .modal-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(232,100,122,0.4); }
-
-    /* question box inside modal */
     .q-box {
       background: var(--blush); border-radius: 16px;
       padding: 20px; margin-bottom: 20px;
       font-family: 'Playfair Display', serif; font-size: 1.1rem;
       color: var(--deep); line-height: 1.5; text-align: center;
+      transition: opacity 0.25s;
     }
-
-    /* ── Animations ── */
-    @keyframes slide-up {
-      from { opacity: 0; transform: translateY(24px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes pop-in {
-      from { opacity: 0; transform: scale(0.7); }
-      to   { opacity: 1; transform: scale(1); }
-    }
-
-    /* ── Streak calendar dots ── */
     .streak-dots { display: flex; gap: 6px; margin-top: 14px; flex-wrap: wrap; }
-    .dot {
-      width: 10px; height: 10px; border-radius: 50%;
-      background: var(--blush);
-    }
+    .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--blush); }
     .dot.filled { background: var(--rose); }
-
-    /* ── Games list ── */
     .game-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
     .game-item {
       display: flex; align-items: center; gap: 12px;
       background: var(--blush); border-radius: 12px; padding: 12px 16px;
-      cursor: pointer; transition: background 0.2s;
-      font-size: 0.9rem; color: var(--deep);
+      cursor: pointer; transition: background 0.2s; font-size: 0.9rem;
     }
     .game-item:hover { background: var(--warm); }
-
-    /* ── Music player mock ── */
     .music-player {
       background: var(--deep); border-radius: 16px;
-      padding: 20px; color: #fff; text-align: center;
-      margin-bottom: 20px;
+      padding: 20px; color: #fff; text-align: center; margin-bottom: 20px;
     }
     .music-player .song-name { font-family: 'Playfair Display', serif; font-size: 1.1rem; margin-bottom: 4px; }
     .music-player .artist { font-size: 0.8rem; opacity: 0.6; margin-bottom: 16px; }
-    .progress-bar { width: 100%; height: 4px; background: rgba(255,255,255,0.2); border-radius: 2px; margin-bottom: 16px; position: relative; cursor: pointer; }
+    .progress-bar { width: 100%; height: 4px; background: rgba(255,255,255,0.2); border-radius: 2px; margin-bottom: 16px; }
     .progress-fill { height: 100%; width: 38%; background: var(--rose); border-radius: 2px; }
     .music-controls { display: flex; justify-content: center; gap: 20px; font-size: 1.5rem; }
     .music-controls span { cursor: pointer; transition: transform 0.2s; }
     .music-controls span:hover { transform: scale(1.2); }
+
+    @keyframes slide-up {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
   </style>
 </head>
 <body>
@@ -267,35 +363,83 @@
 
 <div class="page">
 
-  <!-- Header -->
-  <header>
-    <div class="header-left">
-      <h1>Hello, <span>Arjun</span> 🌸</h1>
-      <p>Priya is online right now · Last seen 2 mins ago</p>
-    </div>
-    <div class="streak">
-      <span class="flame">🔥</span>
-      <div>
-        <div class="count" id="streakCount">14</div>
-        <div class="label">day streak</div>
-      </div>
-    </div>
-  </header>
+  <!-- ── HERO ── -->
+  <div class="hero">
+    <div class="couple-bg" id="coupleBg"></div>
 
-  <!-- Mood strip -->
+    <button class="couple-upload-btn" id="coupleBtn" onclick="document.getElementById('coupleInput').click()">
+      📷 Add couple photo
+    </button>
+    <input type="file" id="coupleInput" accept="image/*" onchange="uploadCouplePhoto(event)"/>
+    <input type="file" id="profileInput" accept="image/*" onchange="uploadProfilePhoto(event)"/>
+
+    <div class="hero-content">
+
+      <!-- Avatars -->
+      <div class="avatar-pair">
+        <div class="avatar-wrap">
+          <div class="avatar" id="myAvatar" onclick="document.getElementById('profileInput').click()" title="Tap to add your photo">
+            <span id="myAvatarEmoji">🧑</span>
+            <img id="myAvatarImg" alt="Your photo"/>
+            <div class="cam-hint">📷</div>
+          </div>
+          <span class="avatar-name" id="myAvatarName">You</span>
+        </div>
+
+        <span class="heart-divider">❤️</span>
+
+        <div class="avatar-wrap">
+          <div class="avatar" style="background:#fde8c8; cursor:default;">
+            <span>🧑</span>
+          </div>
+          <span class="avatar-name" id="partnerAvatarName">Partner</span>
+        </div>
+      </div>
+
+      <!-- Name + streak -->
+      <div class="hero-right">
+        <h1>Hello, <span id="userName">there</span> 🌸</h1>
+        <p>& <span id="partnerNameDisplay">your partner</span> are connected 💕</p>
+        <div class="streak-pill">
+          <span class="flame">🔥</span>
+          <span class="count">14</span>
+          <span style="opacity:0.8; font-size:0.78rem;">day streak</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── MOOD ── -->
   <div class="mood-strip">
     <h3>How are you feeling today?</h3>
     <div class="mood-options">
-      <button class="mood-btn" onclick="setMood(this,'😊','Happy')">😊 Happy</button>
-      <button class="mood-btn" onclick="setMood(this,'🥰','Loved up')">🥰 Loved up</button>
-      <button class="mood-btn" onclick="setMood(this,'😔','Missing you')">😔 Missing you</button>
-      <button class="mood-btn" onclick="setMood(this,'😤','Stressed')">😤 Stressed</button>
-      <button class="mood-btn" onclick="setMood(this,'🤗','Excited')">🤗 Excited</button>
+      <button class="mood-btn" onclick="setMood(this,'Happy')">😊 Happy</button>
+      <button class="mood-btn" onclick="setMood(this,'Loved up')">🥰 Loved up</button>
+      <button class="mood-btn" onclick="setMood(this,'Missing you')">😔 Missing you</button>
+      <button class="mood-btn" onclick="setMood(this,'Stressed')">😤 Stressed</button>
+      <button class="mood-btn" onclick="setMood(this,'Excited')">🤗 Excited</button>
     </div>
     <div class="mood-result" id="moodResult"></div>
   </div>
 
-  <!-- Feature cards -->
+  <!-- ── NAME INPUTS ── -->
+  <div class="name-strip">
+    <h3>Who's here? 💑</h3>
+    <div class="name-fields">
+      <div class="name-field">
+        <label>Your name</label>
+        <input type="text" id="inputUserName" placeholder="e.g. Arjun" oninput="updateNames()"/>
+      </div>
+      <div class="name-heart">❤️</div>
+      <div class="name-field">
+        <label>Partner's name</label>
+        <input type="text" id="inputPartnerName" placeholder="e.g. Priya" oninput="updateNames()"/>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── FEATURE CARDS ── -->
   <div class="grid">
 
     <div class="card" data-color="video" onclick="openModal('video')">
@@ -326,7 +470,7 @@
       <div class="card-action">Open player <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7h8M8 4l3 3-3 3" stroke="#e8647a" stroke-width="1.5" stroke-linecap="round"/></svg></div>
     </div>
 
-    <div class="card" data-color="mood" onclick="openModal('streak')">
+    <div class="card" data-color="streak" onclick="openModal('streak')">
       <div class="card-icon">📅</div>
       <div class="card-title">Your Streak</div>
       <div class="card-desc">You've been showing up for each other every single day. Keep the flame alive!</div>
@@ -336,7 +480,7 @@
   </div>
 </div>
 
-<!-- ── Modals ── -->
+<!-- ── MODAL ── -->
 <div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
   <div class="modal" id="modalBox">
     <button class="modal-close" onclick="closeModal()">✕</button>
@@ -345,26 +489,104 @@
 </div>
 
 <script>
-  // Mood
-  function setMood(btn, emoji, label) {
-    document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    const messages = {
-      'Happy': "That's wonderful! Sharing this with Priya will make her smile too 🌸",
-      'Loved up': "Aww, go send her a message! She'd love to hear that right now 💕",
-      'Missing you': "Distance is hard. Maybe schedule a call soon? You've got this 🤍",
-      'Stressed': "Take a breath. Talking to Priya might help lighten the load 💛",
-      'Excited': "That energy is contagious! Tell Priya all about it 🎉"
-    };
-    document.getElementById('moodResult').textContent = messages[label] || '';
+  // ── Load names ──
+  const uName = localStorage.getItem('userName')    || '';
+  const pName = localStorage.getItem('partnerName') || '';
+
+  document.getElementById('userName').textContent          = uName || 'there';
+  document.getElementById('partnerNameDisplay').textContent = pName || 'your partner';
+  document.getElementById('myAvatarName').textContent      = uName || 'You';
+  document.getElementById('partnerAvatarName').textContent = pName || 'Partner';
+
+  // Pre-fill the input fields
+  document.getElementById('inputUserName').value    = uName;
+  document.getElementById('inputPartnerName').value = pName;
+
+  // ── Live update names as user types ──
+  function updateNames() {
+    const u = document.getElementById('inputUserName').value.trim();
+    const p = document.getElementById('inputPartnerName').value.trim();
+
+    localStorage.setItem('userName',    u);
+    localStorage.setItem('partnerName', p);
+
+    document.getElementById('userName').textContent          = u || 'there';
+    document.getElementById('partnerNameDisplay').textContent = p || 'your partner';
+    document.getElementById('myAvatarName').textContent      = u || 'You';
+    document.getElementById('partnerAvatarName').textContent = p || 'Partner';
   }
 
-  // Modal system
+  // ── Load saved photos ──
+  const savedProfile = localStorage.getItem('profilePhoto');
+  if (savedProfile) applyProfilePhoto(savedProfile);
+
+  const savedCouple = localStorage.getItem('couplePhoto');
+  if (savedCouple) applyCouplePhoto(savedCouple);
+
+  // ── Profile photo ──
+  function uploadProfilePhoto(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      localStorage.setItem('profilePhoto', ev.target.result);
+      applyProfilePhoto(ev.target.result);
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function applyProfilePhoto(src) {
+    const img   = document.getElementById('myAvatarImg');
+    const emoji = document.getElementById('myAvatarEmoji');
+    img.src = src;
+    img.style.display = 'block';
+    emoji.style.display = 'none';
+  }
+
+  // ── Couple photo ──
+  function uploadCouplePhoto(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      localStorage.setItem('couplePhoto', ev.target.result);
+      applyCouplePhoto(ev.target.result);
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function applyCouplePhoto(src) {
+    const bg  = document.getElementById('coupleBg');
+    const btn = document.getElementById('coupleBtn');
+    bg.style.backgroundImage = `url('${src}')`;
+    bg.classList.add('loaded');
+    btn.innerHTML = '📷 Change couple photo';
+  }
+
+  // ── Mood ──
+  function setMood(btn, label) {
+    document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const p = localStorage.getItem('partnerName') || 'your partner';
+    const msgs = {
+      'Happy':       `That's wonderful! Sharing this with ${p} will make them smile too 🌸`,
+      'Loved up':    `Aww, go send ${p} a message! They'd love to hear that right now 💕`,
+      'Missing you': `Distance is hard. Maybe schedule a call soon? You've got this 🤍`,
+      'Stressed':    `Take a breath. Talking to ${p} might help lighten the load 💛`,
+      'Excited':     `That energy is contagious! Tell ${p} all about it 🎉`
+    };
+    document.getElementById('moodResult').textContent = msgs[label] || '';
+  }
+
+  // ── Modals ──
   const modals = {
     video: {
       title: '📹 Video Call',
-      html: `<p>Start an instant video call with Priya. No downloads needed — just click and connect.</p>
-        <button class="modal-btn" onclick="alert('Calling Priya... 💕')">Start Video Call</button>`
+      get html() {
+        const p = localStorage.getItem('partnerName') || 'your partner';
+        return `<p>Start an instant video call with ${p}. No downloads needed — just click and connect.</p>
+          <button class="modal-btn" onclick="alert('Calling ${p}... 💕')">Start Video Call</button>`;
+      }
     },
     questions: {
       title: '💬 Question of the Moment',
@@ -396,25 +618,29 @@
     },
     music: {
       title: '🎵 Listening Together',
-      html: `<div class="music-player">
-        <div class="song-name">A Thousand Miles</div>
-        <div class="artist">Vanessa Carlton</div>
-        <div class="progress-bar"><div class="progress-fill"></div></div>
-        <div class="music-controls">
-          <span title="Previous" onclick="">⏮</span>
-          <span title="Play/Pause" onclick="this.textContent = this.textContent==='▶️'?'⏸':'▶️'">⏸</span>
-          <span title="Next" onclick="">⏭</span>
+      get html() {
+        const p = localStorage.getItem('partnerName') || 'your partner';
+        return `<div class="music-player">
+          <div class="song-name">A Thousand Miles</div>
+          <div class="artist">Vanessa Carlton</div>
+          <div class="progress-bar"><div class="progress-fill"></div></div>
+          <div class="music-controls">
+            <span>⏮</span>
+            <span onclick="this.textContent=this.textContent==='▶️'?'⏸':'▶️'">⏸</span>
+            <span>⏭</span>
+          </div>
         </div>
-      </div>
-      <p style="font-size:0.82rem;color:var(--muted)">Priya is listening along with you right now 💕</p>`
+        <p style="font-size:0.82rem;color:var(--muted)">${p} is listening along with you right now 💕</p>`;
+      }
     },
     streak: {
       title: '🔥 Your Streak',
       get html() {
         const total = 14;
+        const p = localStorage.getItem('partnerName') || 'your partner';
         let dots = '';
-        for(let i=0;i<21;i++) dots += `<div class="dot ${i < total ? 'filled' : ''}"></div>`;
-        return `<p>You and Priya have checked in together <strong>${total} days in a row</strong>. Amazing! Keep showing up for each other.</p>
+        for(let i=0;i<21;i++) dots += `<div class="dot ${i<total?'filled':''}"></div>`;
+        return `<p>You and ${p} have checked in together <strong>${total} days in a row</strong>. Amazing!</p>
           <div class="streak-dots">${dots}</div>
           <p style="font-size:0.8rem;color:var(--muted);margin-top:14px;margin-bottom:0">Each dot = one day together 🌸</p>`;
       }
@@ -427,7 +653,7 @@
     document.getElementById('modalOverlay').classList.add('open');
   }
   function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); }
-  function closeModalOutside(e) { if(e.target === document.getElementById('modalOverlay')) closeModal(); }
+  function closeModalOutside(e) { if(e.target===document.getElementById('modalOverlay')) closeModal(); }
 
   function shuffleQ() {
     const qs = [
@@ -440,14 +666,9 @@
       "If we could spend a whole day together doing anything, what would it be?",
       "What's something you've never told me but want me to know?"
     ];
-    const q = qs[Math.floor(Math.random()*qs.length)];
     const box = document.getElementById('qBox');
     box.style.opacity = 0;
-    setTimeout(() => {
-      box.textContent = `"${q}"`;
-      box.style.opacity = 1;
-    }, 250);
-    box.style.transition = 'opacity 0.25s';
+    setTimeout(() => { box.textContent = `"${qs[Math.floor(Math.random()*qs.length)]}"`;  box.style.opacity = 1; }, 250);
   }
 </script>
 </body>
