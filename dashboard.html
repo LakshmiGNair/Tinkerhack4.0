@@ -620,17 +620,173 @@
       title: '🎵 Listening Together',
       get html() {
         const p = localStorage.getItem('partnerName') || 'your partner';
-        return `<div class="music-player">
-          <div class="song-name">A Thousand Miles</div>
-          <div class="artist">Vanessa Carlton</div>
-          <div class="progress-bar"><div class="progress-fill"></div></div>
-          <div class="music-controls">
-            <span>⏮</span>
-            <span onclick="this.textContent=this.textContent==='▶️'?'⏸':'▶️'">⏸</span>
-            <span>⏭</span>
+        return `
+        <style>
+          .playlist { list-style:none; margin-bottom:16px; display:flex; flex-direction:column; gap:6px; max-height:200px; overflow-y:auto; }
+          .pl-item {
+            display:flex; align-items:center; gap:10px;
+            padding:10px 12px; border-radius:12px; cursor:pointer;
+            transition:background 0.2s; font-size:0.88rem;
+          }
+          .pl-item:hover { background: var(--blush); }
+          .pl-item.active { background: var(--rose); color:#fff; }
+          .pl-item.active .pl-artist { color:rgba(255,255,255,0.75); }
+          .pl-num { font-size:0.75rem; color:var(--muted); width:16px; text-align:center; flex-shrink:0; }
+          .pl-item.active .pl-num { color:rgba(255,255,255,0.7); }
+          .pl-info { flex:1; }
+          .pl-title { font-weight:500; line-height:1.2; }
+          .pl-artist { font-size:0.78rem; color:var(--muted); }
+          .pl-dur { font-size:0.75rem; color:var(--muted); flex-shrink:0; }
+          .pl-item.active .pl-dur { color:rgba(255,255,255,0.7); }
+          .now-playing-bar {
+            background: var(--deep); border-radius:16px;
+            padding:16px 18px; color:#fff; margin-bottom:14px;
+          }
+          .np-top { display:flex; align-items:center; gap:12px; margin-bottom:12px; }
+          .np-art {
+            width:48px; height:48px; border-radius:10px;
+            background: var(--rose); display:grid; place-items:center;
+            font-size:1.4rem; flex-shrink:0;
+          }
+          .np-song { font-family:'Playfair Display',serif; font-size:1rem; line-height:1.2; }
+          .np-artist { font-size:0.78rem; opacity:0.65; margin-top:2px; }
+          .np-progress { width:100%; height:3px; background:rgba(255,255,255,0.2); border-radius:2px; margin-bottom:12px; cursor:pointer; }
+          .np-fill { height:100%; background:var(--rose); border-radius:2px; transition:width 0.5s linear; }
+          .np-times { display:flex; justify-content:space-between; font-size:0.72rem; opacity:0.55; margin-top:-8px; margin-bottom:10px; }
+          .np-controls { display:flex; justify-content:center; align-items:center; gap:18px; }
+          .np-btn { background:none; border:none; color:#fff; font-size:1.4rem; cursor:pointer; transition:transform 0.15s; padding:0; line-height:1; }
+          .np-btn:hover { transform:scale(1.2); }
+          .np-btn.play { font-size:1.8rem; }
+          .sync-note { font-size:0.82rem; color:var(--muted); text-align:center; }
+          .sync-note span { color:var(--rose); font-weight:500; }
+        </style>
+
+        <div class="now-playing-bar">
+          <div class="np-top">
+            <div class="np-art" id="npArt">🎵</div>
+            <div>
+              <div class="np-song" id="npSong">A Thousand Miles</div>
+              <div class="np-artist" id="npArtist">Vanessa Carlton</div>
+            </div>
+          </div>
+          <div class="np-progress" onclick="seekSong(event,this)">
+            <div class="np-fill" id="npFill" style="width:0%"></div>
+          </div>
+          <div class="np-times">
+            <span id="npCurrent">0:00</span>
+            <span id="npDuration">3:58</span>
+          </div>
+          <div class="np-controls">
+            <button class="np-btn" onclick="prevSong()">⏮</button>
+            <button class="np-btn play" id="playBtn" onclick="togglePlay()">▶️</button>
+            <button class="np-btn" onclick="nextSong()">⏭</button>
           </div>
         </div>
-        <p style="font-size:0.82rem;color:var(--muted)">${p} is listening along with you right now 💕</p>`;
+
+        <ul class="playlist" id="playlist">
+          <li class="pl-item active" onclick="selectSong(0)">
+            <span class="pl-num">▶</span>
+            <div class="pl-info"><div class="pl-title">A Thousand Miles</div><div class="pl-artist">Vanessa Carlton</div></div>
+            <span class="pl-dur">3:58</span>
+          </li>
+          <li class="pl-item" onclick="selectSong(1)">
+            <span class="pl-num">2</span>
+            <div class="pl-info"><div class="pl-title">Perfect</div><div class="pl-artist">Ed Sheeran</div></div>
+            <span class="pl-dur">4:23</span>
+          </li>
+          <li class="pl-item" onclick="selectSong(2)">
+            <span class="pl-num">3</span>
+            <div class="pl-info"><div class="pl-title">Can't Help Falling in Love</div><div class="pl-artist">Elvis Presley</div></div>
+            <span class="pl-dur">3:00</span>
+          </li>
+          <li class="pl-item" onclick="selectSong(3)">
+            <span class="pl-num">4</span>
+            <div class="pl-info"><div class="pl-title">Lover</div><div class="pl-artist">Taylor Swift</div></div>
+            <span class="pl-dur">3:41</span>
+          </li>
+          <li class="pl-item" onclick="selectSong(4)">
+            <span class="pl-num">5</span>
+            <div class="pl-info"><div class="pl-title">All of Me</div><div class="pl-artist">John Legend</div></div>
+            <span class="pl-dur">4:29</span>
+          </li>
+          <li class="pl-item" onclick="selectSong(5)">
+            <span class="pl-num">6</span>
+            <div class="pl-info"><div class="pl-title">Make You Feel My Love</div><div class="pl-artist">Adele</div></div>
+            <span class="pl-dur">3:32</span>
+          </li>
+          <li class="pl-item" onclick="selectSong(6)">
+            <span class="pl-num">7</span>
+            <div class="pl-info"><div class="pl-title">Thinking Out Loud</div><div class="pl-artist">Ed Sheeran</div></div>
+            <span class="pl-dur">4:41</span>
+          </li>
+          <li class="pl-item" onclick="selectSong(7)">
+            <span class="pl-num">8</span>
+            <div class="pl-info"><div class="pl-title">Lucky</div><div class="pl-artist">Jason Mraz ft. Colbie Caillat</div></div>
+            <span class="pl-dur">3:07</span>
+          </li>
+        </ul>
+
+        <p class="sync-note">🎧 You & <span>${p}</span> are listening together 💕</p>
+
+        <script>
+          const songs = [
+            { title:"A Thousand Miles",       artist:"Vanessa Carlton",              emoji:"🎹", dur:"3:58", secs:238 },
+            { title:"Perfect",                artist:"Ed Sheeran",                   emoji:"💛", dur:"4:23", secs:263 },
+            { title:"Can't Help Falling in Love", artist:"Elvis Presley",            emoji:"🌹", dur:"3:00", secs:180 },
+            { title:"Lover",                  artist:"Taylor Swift",                 emoji:"💞", dur:"3:41", secs:221 },
+            { title:"All of Me",              artist:"John Legend",                  emoji:"🎶", dur:"4:29", secs:269 },
+            { title:"Make You Feel My Love",  artist:"Adele",                        emoji:"🕯️", dur:"3:32", secs:212 },
+            { title:"Thinking Out Loud",      artist:"Ed Sheeran",                   emoji:"🌅", dur:"4:41", secs:281 },
+            { title:"Lucky",                  artist:"Jason Mraz ft. Colbie Caillat",emoji:"🍀", dur:"3:07", secs:187 },
+          ];
+          let curIdx = 0, playing = false, elapsed = 0, timer = null;
+
+          function selectSong(i) {
+            curIdx = i; elapsed = 0; clearInterval(timer);
+            playing = false;
+            document.querySelectorAll('.pl-item').forEach((el,j) => {
+              el.classList.toggle('active', j===i);
+              el.querySelector('.pl-num').textContent = j===i ? '▶' : (j+1);
+            });
+            const s = songs[i];
+            document.getElementById('npSong').textContent   = s.title;
+            document.getElementById('npArtist').textContent = s.artist;
+            document.getElementById('npArt').textContent    = s.emoji;
+            document.getElementById('npDuration').textContent = s.dur;
+            document.getElementById('npFill').style.width   = '0%';
+            document.getElementById('npCurrent').textContent = '0:00';
+            document.getElementById('playBtn').textContent  = '▶️';
+          }
+
+          function togglePlay() {
+            playing = !playing;
+            document.getElementById('playBtn').textContent = playing ? '⏸' : '▶️';
+            if (playing) {
+              timer = setInterval(() => {
+                elapsed++;
+                const total = songs[curIdx].secs;
+                if (elapsed >= total) { nextSong(); return; }
+                document.getElementById('npFill').style.width = (elapsed/total*100) + '%';
+                const m = Math.floor(elapsed/60), s = elapsed%60;
+                document.getElementById('npCurrent').textContent = m+':'+(s<10?'0':'')+s;
+              }, 1000);
+            } else {
+              clearInterval(timer);
+            }
+          }
+
+          function nextSong() { selectSong((curIdx+1) % songs.length); }
+          function prevSong() { selectSong((curIdx-1+songs.length) % songs.length); }
+
+          function seekSong(e, bar) {
+            const rect = bar.getBoundingClientRect();
+            const pct  = (e.clientX - rect.left) / rect.width;
+            elapsed = Math.floor(pct * songs[curIdx].secs);
+            document.getElementById('npFill').style.width = (pct*100)+'%';
+            const m = Math.floor(elapsed/60), s = elapsed%60;
+            document.getElementById('npCurrent').textContent = m+':'+(s<10?'0':'')+s;
+          }
+        <\/script>`;
       }
     },
     streak: {
