@@ -89,13 +89,7 @@ Names entered at login carry through the entire app — greetings, mood messages
 [Run commands - e.g., npm start, python app.py]
 ```
 
-### For Hardware:
 
-#### Components Required
-[List all components needed with specifications]
-
-#### Circuit Setup
-[Explain how to set up the circuit]
 
 ---
 
@@ -105,337 +99,232 @@ Names entered at login carry through the entire app — greetings, mood messages
 
 #### Screenshots (Add at least 3)
 
-![Screenshot1](Add screenshot 1 here with proper name)
-*Add caption explaining what this shows*
+<img width="929" height="852" alt="Screenshot 2026-02-21 100551" src="https://github.com/user-attachments/assets/cd4d088e-cbf4-4d79-a65e-3602104d2449" />
 
-![Screenshot2](Add screenshot 2 here with proper name)
-*Add caption explaining what this shows*
+A simple, beautiful login where couples enter their names, email, and password to step into their shared space on Bondify
 
-![Screenshot3](Add screenshot 3 here with proper name)
-*Add caption explaining what this shows*
+<img width="1745" height="843" alt="Screenshot 2026-02-21 100635" src="https://github.com/user-attachments/assets/06456b8d-0b71-4f4e-be1a-f451fa1d1987" />
+
+Bondify's personalized dashboard greets each couple by name, shows their avatars side by side with a 14-day streak, and lets them check in emotionally with a single tap. The mood analyzer and name fields make every session feel uniquely theirs — warm, intimate, and built for two. 💕
+
+<img width="814" height="413" alt="image" src="https://github.com/user-attachments/assets/85fb8725-d5c8-4bb7-9012-3559df483983" />
+
+Bondify's feature hub gives couples five ways to connect — video calls for face-to-face moments, question cards for deeper conversations, mini-games for fun across the miles, synced music to listen together, and a streak tracker to celebrate showing up for each other every day. Everything a couple needs, all in one place. 💕
 
 #### Diagrams
 
 **System Architecture:**
 
-![Architecture Diagram](docs/architecture.png)
-*Explain your system architecture - components, data flow, tech stack interaction*
+
+---
+
+## 🏗️ Bondify — System Architecture
+
+### Frontend Layer (Client-Side)
+The entire application runs on the browser using plain **HTML5, CSS3, and JavaScript** — no frameworks, no backend, no server required. All logic, rendering, and interactivity happens client-side.
+
+### Data Layer (localStorage)
+Since Bondify is a frontend-only app, user data is persisted using the browser's **localStorage API**:
+- Partner names → `userName`, `partnerName`
+- Profile photo → `profilePhoto` (base64)
+- Couple photo → `couplePhoto` (base64)
+- Streak count → `streakCount`
+- Mood selection → `currentMood`
+
+### External Integrations
+| Service | Purpose |
+|---|---|
+| **YouTube Embed API** | Plays songs inside the dashboard via iframe |
+| **Google Fonts API** | Loads Playfair Display + DM Sans typography |
+| **Spotify (redirect)** | Opens Spotify links in a new tab |
+
+### Navigation Flow
+```
+index.html (Login)
+     ↓  localStorage.setItem(names)
+dashboard.html (Main App)
+     ↓
+[ Video | Questions | Games | Music | Streak ] → Modal Popups
+```
+
+### Architecture Diagram
+```
+┌─────────────────────────────────────┐
+│           Browser (Client)          │
+│                                     │
+│  ┌──────────┐     ┌──────────────┐  │
+│  │ index.html│────▶│dashboard.html│  │
+│  │  Login   │     │   Dashboard  │  │
+│  └──────────┘     └──────┬───────┘  │
+│                          │          │
+│              ┌───────────▼────────┐ │
+│              │    localStorage    │ │
+│              │  names, photos,    │ │
+│              │  streak, mood      │ │
+│              └────────────────────┘ │
+│                                     │
+│  External APIs                      │
+│  ┌──────────┐  ┌──────────────────┐ │
+│  │ YouTube  │  │  Google Fonts    │ │
+│  │  Embed   │  │      CDN         │ │
+│  └──────────┘  └──────────────────┘ │
+└─────────────────────────────────────┘
+```
+
+---
+
+**Key design decision:** By keeping the architecture entirely client-side, Bondify has zero hosting cost, zero backend complexity, and can be deployed in seconds on any static host like GitHub Pages or Netlify.
 
 **Application Workflow:**
 
-![Workflow](docs/workflow.png)
-*Add caption explaining your workflow*
 
 ---
 
-### For Hardware:
+## 🔄 Bondify — Application Workflow
 
-#### Schematic & Circuit
+### Step 1 — Login (`index.html`)
+```
+User opens Bondify
+        ↓
+Enters: Your Name + Partner's Name + Email + Password
+        ↓
+Clicks "Let's go 💕"
+        ↓
+Names saved to localStorage
+        ↓
+Redirects to dashboard.html
+```
 
-![Circuit](Add your circuit diagram here)
-*Add caption explaining connections*
+### Step 2 — Dashboard Loads (`dashboard.html`)
+```
+Dashboard opens
+        ↓
+Reads names from localStorage
+        ↓
+Greets user → "Hello, Lachmi 🌸 & Vyshuu are connected 💕"
+        ↓
+Loads saved profile photo + couple photo (if any)
+        ↓
+Shows 14-day streak 🔥
+```
 
-![Schematic](Add your schematic diagram here)
-*Add caption explaining the schematic*
+### Step 3 — User Interactions
+```
+┌─────────────────────────────────────────────┐
+│              DASHBOARD ACTIONS              │
+├─────────────┬───────────────────────────────┤
+│ Upload Photo│ Click avatar → file picker    │
+│             │ → saved to localStorage       │
+├─────────────┼───────────────────────────────┤
+│ Couple Photo│ Click "Add couple photo"      │
+│             │ → becomes hero background     │
+├─────────────┼───────────────────────────────┤
+│ Update Names│ Type in name fields           │
+│             │ → hero updates live instantly │
+├─────────────┼───────────────────────────────┤
+│ Mood Check  │ Click a mood button           │
+│             │ → personalized message shown  │
+└─────────────┴───────────────────────────────┘
+```
+
+### Step 4 — Feature Cards (Modal Flow)
+```
+User clicks a feature card
+        ↓
+Modal opens with animation
+        ↓
+┌──────────────┬──────────────────────────────┐
+│ 📹 Video Call │ Click → Start video call     │
+├──────────────┼──────────────────────────────┤
+│ 💬 Questions  │ Random question drawn        │
+│              │ → Shuffle for next one       │
+├──────────────┼──────────────────────────────┤
+│ 🎮 Games      │ Pick a game → launches it   │
+├──────────────┼──────────────────────────────┤
+│ 🎵 Music      │ Paste YouTube link → plays  │
+│              │ OR pick preset song          │
+│              │ → embeds & plays instantly   │
+├──────────────┼──────────────────────────────┤
+│ 📅 Streak     │ Shows dot calendar of       │
+│              │ daily check-in history       │
+└──────────────┴──────────────────────────────┘
+        ↓
+User closes modal → back to dashboard
+```
+
+### Step 5 — Data Persistence
+```
+Any change (name, photo, mood)
+        ↓
+Saved to localStorage
+        ↓
+Available on next visit automatically
+        ↓
+No login needed again ✅
+```
+
+### Complete End-to-End Flow
+```
+Open App → Login → Dashboard → 
+Pick a Feature → Interact → Close Modal → 
+Pick Another Feature → Data Auto-Saved → 
+Come Back Tomorrow → Streak +1 🔥
+```
+
+---
+
+**Core principle:** Every interaction is instant, smooth, and requires no page reloads — making Bondify feel like a native app despite being built with pure HTML, CSS, and JavaScript.
+
+---
+
 
 #### Build Photos
 
-![Team](Add photo of your team here)
+![Team]
+![photo_2026-02-21_10-21-32](https://github.com/user-attachments/assets/a97363eb-f78a-4475-9efc-159e8bfdb545)
 
-![Components](Add photo of your components here)
-*List out all components shown*
 
-![Build](Add photos of build process here)
-*Explain the build steps*
+![Final]<img width="1627" height="825" alt="Screenshot 2026-02-21 100702" src="https://github.com/user-attachments/assets/ee208668-a646-41bc-a6ff-6784fb195cb6" />
 
-![Final](Add photo of final product here)
-*Explain the final build*
+## 🚀 Bondify — Final Build
 
----
+Bondify is a **two-page web app** built with pure HTML, CSS, and JavaScript — no frameworks, no backend needed.
 
-## Additional Documentation
+**`index.html`** — Login page that collects both partner names, saves them to `localStorage`, and redirects to the dashboard.
 
-### For Web Projects with Backend:
+**`dashboard.html`** — The main app with 5 features all in one place:
+- 🖼️ **Hero banner** — personalized greeting, avatar upload, couple photo, and streak counter
+- 😊 **Mood analyzer** — daily emotional check-in with personalized responses
+- 🎵 **Music player** — paste any YouTube link or pick from 8 preset romantic songs
+- 💬 **Question cards** — random deep questions to spark meaningful conversations
+- 🎮 **Games & Streak** — mini-games and a visual check-in history
 
-#### API Documentation
-
-**Base URL:** `https://api.yourproject.com`
-
-##### Endpoints
-
-**GET /api/endpoint**
-- **Description:** [What it does]
-- **Parameters:**
-  - `param1` (string): [Description]
-  - `param2` (integer): [Description]
-- **Response:**
-```json
-{
-  "status": "success",
-  "data": {}
-}
-```
-
-**POST /api/endpoint**
-- **Description:** [What it does]
-- **Request Body:**
-```json
-{
-  "field1": "value1",
-  "field2": "value2"
-}
-```
-- **Response:**
-```json
-{
-  "status": "success",
-  "message": "Operation completed"
-}
-```
-
-[Add more endpoints as needed...]
+All data — names, photos, moods — is saved in `localStorage` so everything is restored automatically on the next visit. No login needed twice. Deploy it instantly on GitHub Pages or Netlify for free. 🚀
 
 ---
 
-### For Mobile Apps:
 
-#### App Flow Diagram
-
-![App Flow](docs/app-flow.png)
-*Explain the user flow through your application*
-
-#### Installation Guide
-
-**For Android (APK):**
-1. Download the APK from [Release Link]
-2. Enable "Install from Unknown Sources" in your device settings:
-   - Go to Settings > Security
-   - Enable "Unknown Sources"
-3. Open the downloaded APK file
-4. Follow the installation prompts
-5. Open the app and enjoy!
-
-**For iOS (IPA) - TestFlight:**
-1. Download TestFlight from the App Store
-2. Open this TestFlight link: [Your TestFlight Link]
-3. Click "Install" or "Accept"
-4. Wait for the app to install
-5. Open the app from your home screen
-
-**Building from Source:**
-```bash
-# For Android
-flutter build apk
-# or
-./gradlew assembleDebug
-
-# For iOS
-flutter build ios
-# or
-xcodebuild -workspace App.xcworkspace -scheme App -configuration Debug
-```
-
----
-
-### For Hardware Projects:
-
-#### Bill of Materials (BOM)
-
-| Component | Quantity | Specifications | Price | Link/Source |
-|-----------|----------|----------------|-------|-------------|
-| Arduino Uno | 1 | ATmega328P, 16MHz | ₹450 | [Link] |
-| LED | 5 | Red, 5mm, 20mA | ₹5 each | [Link] |
-| Resistor | 5 | 220Ω, 1/4W | ₹1 each | [Link] |
-| Breadboard | 1 | 830 points | ₹100 | [Link] |
-| Jumper Wires | 20 | Male-to-Male | ₹50 | [Link] |
-| [Add more...] | | | | |
-
-**Total Estimated Cost:** ₹[Amount]
-
-#### Assembly Instructions
-
-**Step 1: Prepare Components**
-1. Gather all components listed in the BOM
-2. Check component specifications
-3. Prepare your workspace
-![Step 1](images/assembly-step1.jpg)
-*Caption: All components laid out*
-
-**Step 2: Build the Power Supply**
-1. Connect the power rails on the breadboard
-2. Connect Arduino 5V to breadboard positive rail
-3. Connect Arduino GND to breadboard negative rail
-![Step 2](images/assembly-step2.jpg)
-*Caption: Power connections completed*
-
-**Step 3: Add Components**
-1. Place LEDs on breadboard
-2. Connect resistors in series with LEDs
-3. Connect LED cathodes to GND
-4. Connect LED anodes to Arduino digital pins (2-6)
-![Step 3](images/assembly-step3.jpg)
-*Caption: LED circuit assembled*
-
-**Step 4: [Continue for all steps...]**
-
-**Final Assembly:**
-![Final Build](images/final-build.jpg)
-*Caption: Completed project ready for testing*
-
----
-
-### For Scripts/CLI Tools:
-
-#### Command Reference
-
-**Basic Usage:**
-```bash
-python script.py [options] [arguments]
-```
-
-**Available Commands:**
-- `command1 [args]` - Description of what command1 does
-- `command2 [args]` - Description of what command2 does
-- `command3 [args]` - Description of what command3 does
-
-**Options:**
-- `-h, --help` - Show help message and exit
-- `-v, --verbose` - Enable verbose output
-- `-o, --output FILE` - Specify output file path
-- `-c, --config FILE` - Specify configuration file
-- `--version` - Show version information
-
-**Examples:**
-
-```bash
-# Example 1: Basic usage
-python script.py input.txt
-
-# Example 2: With verbose output
-python script.py -v input.txt
-
-# Example 3: Specify output file
-python script.py -o output.txt input.txt
-
-# Example 4: Using configuration
-python script.py -c config.json --verbose input.txt
-```
-
-#### Demo Output
-
-**Example 1: Basic Processing**
-
-**Input:**
-```
-This is a sample input file
-with multiple lines of text
-for demonstration purposes
-```
-
-**Command:**
-```bash
-python script.py sample.txt
-```
-
-**Output:**
-```
-Processing: sample.txt
-Lines processed: 3
-Characters counted: 86
-Status: Success
-Output saved to: output.txt
-```
-
-**Example 2: Advanced Usage**
-
-**Input:**
-```json
-{
-  "name": "test",
-  "value": 123
-}
-```
-
-**Command:**
-```bash
-python script.py -v --format json data.json
-```
-
-**Output:**
-```
-[VERBOSE] Loading configuration...
-[VERBOSE] Parsing JSON input...
-[VERBOSE] Processing data...
-{
-  "status": "success",
-  "processed": true,
-  "result": {
-    "name": "test",
-    "value": 123,
-    "timestamp": "2024-02-07T10:30:00"
-  }
-}
-[VERBOSE] Operation completed in 0.23s
-```
-
----
-
-## Project Demo
-
-### Video
-[Add your demo video link here - YouTube, Google Drive, etc.]
-
-*Explain what the video demonstrates - key features, user flow, technical highlights*
-
-### Additional Demos
-[Add any extra demo materials/links - Live site, APK download, online demo, etc.]
-
----
 
 ## AI Tools Used (Optional - For Transparency Bonus)
 
 If you used AI tools during development, document them here for transparency:
 
-**Tool Used:** [e.g., GitHub Copilot, v0.dev, Cursor, ChatGPT, Claude]
+**Tool Used:**  GitHub Copilot ChatGPT, Claude
 
-**Purpose:** [What you used it for]
-- Example: "Generated boilerplate React components"
-- Example: "Debugging assistance for async functions"
-- Example: "Code review and optimization suggestions"
+**Purpose:** code generation and analysis
 
-**Key Prompts Used:**
-- "Create a REST API endpoint for user authentication"
-- "Debug this async function that's causing race conditions"
-- "Optimize this database query for better performance"
 
-**Percentage of AI-generated code:** [Approximately X%]
-
-**Human Contributions:**
-- Architecture design and planning
-- Custom business logic implementation
-- Integration and testing
-- UI/UX design decisions
-
-*Note: Proper documentation of AI usage demonstrates transparency and earns bonus points in evaluation!*
 
 ---
 
 ## Team Contributions
 
-- [Name 1]: [Specific contributions - e.g., Frontend development, API integration, etc.]
-- [Name 2]: [Specific contributions - e.g., Backend development, Database design, etc.]
-- [Name 3]: [Specific contributions - e.g., UI/UX design, Testing, Documentation, etc.]
+- Vaishnavi B:  Frontend development
+- Lakshmi G Nair: Backend development
+
 
 ---
 
-## License
-
-This project is licensed under the [LICENSE_NAME] License - see the [LICENSE](LICENSE) file for details.
-
-**Common License Options:**
-- MIT License (Permissive, widely used)
-- Apache 2.0 (Permissive with patent grant)
-- GPL v3 (Copyleft, requires derivative works to be open source)
 
 ---
 
