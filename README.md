@@ -14,16 +14,18 @@
 - Member 2: Vaishnavi B- College of Engineering Attingal
 
 ### Hosted Project Link
-[mention your project hosted link here]
+https://lakshmignair.github.io/Tinkerhack4.0/
 
 ### Project Description
-[2-3 lines about what your project does]
+**Bondify** is a web application designed for couples in long-distance relationships to feel closer, stay connected, and nurture their bond — no matter how many miles apart they are. Built with pure HTML, CSS, and JavaScript, Bondify requires zero installation and works instantly in any browser.
 
 ### The Problem statement
-[What problem are you solving?]
+Long-distance relationships are hard. The absence of physical presence, time zone differences, and the monotony of just texting or calling can make couples feel disconnected over time. There is no single platform that combines emotional check-ins, shared entertainment, meaningful conversation starters, and fun activities — all tailored specifically for couples.
+
+Bondify solves this by bringing everything a couple needs into one warm, beautiful space.
 
 ### The Solution
-[How are you solving it?]
+Bondify solves the emotional disconnect in long-distance relationships by bringing everything couples need into one place — mood check-ins, shared music, fun games, and daily streaks. Instead of juggling multiple apps, couples get a single warm, personal space designed just for them. It turns the distance from a barrier into an opportunity to connect more intentionally, every single day.
 
 ---
 
@@ -32,25 +34,44 @@
 ### Technologies/Components Used
 
 **For Software:**
-- Languages used: [e.g., JavaScript, Python, Java]
-- Frameworks used: [e.g., React, Django, Spring Boot]
-- Libraries used: [e.g., axios, pandas, JUnit]
-- Tools used: [e.g., VS Code, Git, Docker]
+- Languages used: HTML,CSS,JavaScript
+- Frameworks used: NIL
+- Libraries used: NIL
+- Tools used: VS Code,Github
 
 **For Hardware:**
-- Main components: [List main components]
-- Specifications: [Technical specifications]
-- Tools required: [List tools needed]
+- Main components:NIL
+- Specifications: NIL
+- Tools required: NIL
 
 ---
 
 ## Features
 
 List the key features of your project:
-- Feature 1: [Description]
-- Feature 2: [Description]
-- Feature 3: [Description]
-- Feature 4: [Description]
+- ### 🔥 Daily Streak Tracker
+Couples are encouraged to log in every day to keep their streak alive. Seeing that flame grow motivates both partners to show up for each other consistently, turning a small daily habit into a meaningful ritual.
+
+### 😊 Mood Analyzer
+Each partner can share how they're feeling — Happy, Loved up, Missing you, Stressed, or Excited. The app responds with a personalized message that encourages connection based on the mood selected. This creates emotional awareness between partners even when they can't be physically present.
+
+### 💬 Question Cards
+A curated set of deep, fun, and thought-provoking questions that couples can answer together. From "What was the exact moment you knew I was special?" to "Describe our future home in three words" — these cards spark meaningful conversations that go beyond the usual small talk.
+
+### 🎵 Sync Music Player
+Couples can paste any YouTube link or pick from a curated playlist of 8 romantic songs and listen together in real time. The embedded YouTube player means no extra apps are needed. Spotify links are also supported with a direct open option.
+
+### 🎮 Play Together
+A set of mini-games built for two — Would You Rather, Trivia for Two, Guess the Memory, and 20 Questions. These light-hearted games add fun and laughter to long-distance interactions.
+
+### 📹 Video Call
+A one-click video call button to instantly connect face-to-face, making it easy to jump from any activity straight into a live conversation.
+
+### 📸 Profile & Couple Photo Upload
+Each user can upload their own profile photo as an avatar, and together they can set a shared couple photo that becomes the beautiful hero background of the dashboard — making the space feel personal and theirs.
+
+### 👤 Personalized Experience
+Names entered at login carry through the entire app — greetings, mood messages, music notes, and streak counts all reference both partners by name, making every interaction feel intimate and personal.
 
 ---
 
