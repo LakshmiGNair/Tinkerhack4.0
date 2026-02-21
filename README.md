@@ -286,6 +286,10 @@ Come Back Tomorrow → Streak +1 🔥
 
 ![Final]<img width="1627" height="825" alt="Screenshot 2026-02-21 100702" src="https://github.com/user-attachments/assets/ee208668-a646-41bc-a6ff-6784fb195cb6" />
 
+---
+## Demo video
+
+
 ## 🚀 Bondify — Final Build
 
 Bondify is a **two-page web app** built with pure HTML, CSS, and JavaScript — no frameworks, no backend needed.
