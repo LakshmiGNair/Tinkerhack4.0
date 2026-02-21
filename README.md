@@ -1,4 +1,4 @@
-# Tinkerhack4.0
+
 <p align="center">
   <img src="./img.png" alt="Project Banner" width="100%">
 </p>
