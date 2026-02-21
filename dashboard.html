@@ -1,66 +1,454 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard ❤️</title>
-  <link rel="stylesheet" href="style.css">
-</head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Together — Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    :root {
+      --rose:    #e8647a;
+      --blush:   #f9dde2;
+      --cream:   #fdf6f0;
+      --warm:    #f2c4a0;
+      --deep:    #2d1b24;
+      --muted:   #9b7b85;
+      --card-bg: rgba(255,255,255,0.72);
+      --shadow:  0 8px 32px rgba(45,27,36,0.10);
+      --radius:  20px;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--deep);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Background blobs ── */
+    .bg-blobs {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    }
+    .blob {
+      position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.35;
+      animation: drift 12s ease-in-out infinite alternate;
+    }
+    .blob-1 { width: 520px; height: 520px; background: #f7bcc8; top: -120px; left: -80px; animation-delay: 0s; }
+    .blob-2 { width: 400px; height: 400px; background: #f9d4a0; bottom: -80px; right: -60px; animation-delay: 3s; }
+    .blob-3 { width: 300px; height: 300px; background: #c4d9f7; top: 40%; left: 55%; animation-delay: 6s; }
+
+    @keyframes drift {
+      from { transform: translate(0,0) scale(1); }
+      to   { transform: translate(30px, 20px) scale(1.06); }
+    }
+
+    /* ── Layout ── */
+    .page { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 36px 24px 60px; }
+
+    /* ── Header ── */
+    header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 40px; flex-wrap: wrap; gap: 16px;
+    }
+    .header-left h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      color: var(--deep);
+      line-height: 1.15;
+    }
+    .header-left h1 span { color: var(--rose); font-style: italic; }
+    .header-left p { color: var(--muted); font-size: 0.9rem; margin-top: 4px; }
+
+    /* ── Streak badge ── */
+    .streak {
+      display: flex; align-items: center; gap: 10px;
+      background: var(--deep); color: #fff;
+      border-radius: 50px; padding: 10px 20px;
+      font-size: 0.9rem; font-weight: 500;
+      box-shadow: 0 4px 16px rgba(45,27,36,0.22);
+      animation: pop-in 0.6s cubic-bezier(.34,1.56,.64,1) both;
+      cursor: default;
+    }
+    .streak .flame { font-size: 1.3rem; animation: flicker 1.4s ease-in-out infinite alternate; }
+    .streak .count { font-family: 'Playfair Display', serif; font-size: 1.5rem; line-height: 1; }
+    .streak .label { opacity: 0.75; font-size: 0.78rem; line-height: 1; }
+    @keyframes flicker {
+      from { transform: scale(1) rotate(-5deg); }
+      to   { transform: scale(1.15) rotate(5deg); }
+    }
+
+    /* ── Mood strip ── */
+    .mood-strip {
+      background: var(--card-bg);
+      border: 1px solid rgba(232,100,122,0.15);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin-bottom: 32px;
+      backdrop-filter: blur(12px);
+      box-shadow: var(--shadow);
+      animation: slide-up 0.5s 0.1s ease both;
+    }
+    .mood-strip h3 { font-family: 'Playfair Display', serif; font-size: 1rem; margin-bottom: 14px; color: var(--deep); }
+    .mood-options { display: flex; gap: 12px; flex-wrap: wrap; }
+    .mood-btn {
+      border: none; background: var(--blush); border-radius: 50px;
+      padding: 8px 18px; cursor: pointer; font-family: 'DM Sans', sans-serif;
+      font-size: 0.88rem; color: var(--deep); transition: all 0.2s;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .mood-btn:hover, .mood-btn.active {
+      background: var(--rose); color: #fff; transform: translateY(-2px);
+      box-shadow: 0 4px 14px rgba(232,100,122,0.35);
+    }
+    .mood-result {
+      margin-top: 14px; font-size: 0.88rem; color: var(--muted);
+      min-height: 20px; transition: opacity 0.3s;
+    }
+
+    /* ── Feature grid ── */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid rgba(232,100,122,0.12);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      backdrop-filter: blur(12px);
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      transition: transform 0.25s, box-shadow 0.25s;
+      animation: slide-up 0.5s ease both;
+      position: relative; overflow: hidden;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .card::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(232,100,122,0.08) 0%, transparent 60%);
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .card:hover { transform: translateY(-5px); box-shadow: 0 16px 48px rgba(45,27,36,0.14); }
+    .card:hover::before { opacity: 1; }
+    .card:nth-child(1) { animation-delay: 0.15s; }
+    .card:nth-child(2) { animation-delay: 0.22s; }
+    .card:nth-child(3) { animation-delay: 0.29s; }
+    .card:nth-child(4) { animation-delay: 0.36s; }
+    .card:nth-child(5) { animation-delay: 0.43s; }
+
+    .card-icon {
+      font-size: 2.2rem;
+      width: 56px; height: 56px;
+      background: var(--blush);
+      border-radius: 16px;
+      display: grid; place-items: center;
+      transition: transform 0.3s;
+    }
+    .card:hover .card-icon { transform: scale(1.12) rotate(-4deg); }
+
+    .card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem; color: var(--deep);
+    }
+    .card-desc {
+      font-size: 0.87rem; color: var(--muted); line-height: 1.55;
+    }
+    .card-action {
+      margin-top: auto;
+      display: inline-flex; align-items: center; gap: 6px;
+      color: var(--rose); font-size: 0.85rem; font-weight: 500;
+    }
+    .card-action svg { transition: transform 0.2s; }
+    .card:hover .card-action svg { transform: translateX(4px); }
+
+    /* specific accent colours */
+    .card[data-color="video"] .card-icon { background: #ddf0fb; }
+    .card[data-color="questions"] .card-icon { background: #fde8c8; }
+    .card[data-color="games"] .card-icon { background: #d8f5e4; }
+    .card[data-color="music"] .card-icon { background: #ede0fb; }
+    .card[data-color="mood"] .card-icon { background: #fde2e9; }
+
+    /* ── Modal overlay ── */
+    .modal-overlay {
+      position: fixed; inset: 0; z-index: 100;
+      background: rgba(45,27,36,0.45); backdrop-filter: blur(6px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 24px;
+      opacity: 0; pointer-events: none; transition: opacity 0.3s;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal {
+      background: #fff; border-radius: 28px;
+      padding: 36px 32px; max-width: 480px; width: 100%;
+      box-shadow: 0 24px 80px rgba(45,27,36,0.25);
+      transform: scale(0.9); transition: transform 0.3s cubic-bezier(.34,1.56,.64,1);
+      position: relative;
+    }
+    .modal-overlay.open .modal { transform: scale(1); }
+    .modal h2 { font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 10px; }
+    .modal p { color: var(--muted); font-size: 0.9rem; line-height: 1.6; margin-bottom: 20px; }
+    .modal-close {
+      position: absolute; top: 16px; right: 20px;
+      background: none; border: none; font-size: 1.4rem;
+      cursor: pointer; color: var(--muted); transition: color 0.2s;
+    }
+    .modal-close:hover { color: var(--rose); }
+    .modal-btn {
+      display: inline-block; background: var(--rose); color: #fff;
+      border: none; border-radius: 50px; padding: 12px 28px;
+      font-family: 'DM Sans', sans-serif; font-size: 0.95rem;
+      cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .modal-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(232,100,122,0.4); }
+
+    /* question box inside modal */
+    .q-box {
+      background: var(--blush); border-radius: 16px;
+      padding: 20px; margin-bottom: 20px;
+      font-family: 'Playfair Display', serif; font-size: 1.1rem;
+      color: var(--deep); line-height: 1.5; text-align: center;
+    }
+
+    /* ── Animations ── */
+    @keyframes slide-up {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pop-in {
+      from { opacity: 0; transform: scale(0.7); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    /* ── Streak calendar dots ── */
+    .streak-dots { display: flex; gap: 6px; margin-top: 14px; flex-wrap: wrap; }
+    .dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--blush);
+    }
+    .dot.filled { background: var(--rose); }
+
+    /* ── Games list ── */
+    .game-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+    .game-item {
+      display: flex; align-items: center; gap: 12px;
+      background: var(--blush); border-radius: 12px; padding: 12px 16px;
+      cursor: pointer; transition: background 0.2s;
+      font-size: 0.9rem; color: var(--deep);
+    }
+    .game-item:hover { background: var(--warm); }
+
+    /* ── Music player mock ── */
+    .music-player {
+      background: var(--deep); border-radius: 16px;
+      padding: 20px; color: #fff; text-align: center;
+      margin-bottom: 20px;
+    }
+    .music-player .song-name { font-family: 'Playfair Display', serif; font-size: 1.1rem; margin-bottom: 4px; }
+    .music-player .artist { font-size: 0.8rem; opacity: 0.6; margin-bottom: 16px; }
+    .progress-bar { width: 100%; height: 4px; background: rgba(255,255,255,0.2); border-radius: 2px; margin-bottom: 16px; position: relative; cursor: pointer; }
+    .progress-fill { height: 100%; width: 38%; background: var(--rose); border-radius: 2px; }
+    .music-controls { display: flex; justify-content: center; gap: 20px; font-size: 1.5rem; }
+    .music-controls span { cursor: pointer; transition: transform 0.2s; }
+    .music-controls span:hover { transform: scale(1.2); }
+  </style>
+</head>
 <body>
 
-<!-- Header with Streak and Profile -->
-<div class="dashboard-header">
-  <div class="streak-section">
-    <span class="streak-flame">🔥</span>
-    <span class="streak-number" id="streakCount">0</span>
-  </div>
-  
-  <button class="profile-btn" onclick="showProfile()">👤 Profile</button>
+<div class="bg-blobs">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
 </div>
 
-<!-- Profile Modal -->
-<div id="profileModal" class="profile-modal">
-  <div class="profile-content">
-    <button class="profile-close" onclick="closeProfile()">✕</button>
-    <h2>User Profile</h2>
-    <p><strong>Name:</strong> <span id="profileName">User</span></p>
-    <p><strong>Email:</strong> <span id="profileEmail"></span></p>
-    <p><strong>Streak:</strong> <span id="profileStreak">0</span> days</p>
-    <button class="logout-btn" onclick="logout()">Logout</button>
-  </div>
-</div>
+<div class="page">
 
-<div class="container">
-
-  <!-- Daily Question Section -->
-  <div class="question-section">
-    <h2 class="question-title">How are you today? 💭</h2>
-    <div class="answer-input-wrapper">
-      <textarea 
-        id="answerBox" 
-        class="answer-box" 
-        placeholder="Share your feelings, thoughts, or how your day went...">
-      </textarea>
-      <button class="save-btn" onclick="saveAnswer()">Send ➤</button>
+  <!-- Header -->
+  <header>
+    <div class="header-left">
+      <h1>Hello, <span>Arjun</span> 🌸</h1>
+      <p>Priya is online right now · Last seen 2 mins ago</p>
     </div>
-    <div id="moodDisplay" class="mood-display"></div>
+    <div class="streak">
+      <span class="flame">🔥</span>
+      <div>
+        <div class="count" id="streakCount">14</div>
+        <div class="label">day streak</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mood strip -->
+  <div class="mood-strip">
+    <h3>How are you feeling today?</h3>
+    <div class="mood-options">
+      <button class="mood-btn" onclick="setMood(this,'😊','Happy')">😊 Happy</button>
+      <button class="mood-btn" onclick="setMood(this,'🥰','Loved up')">🥰 Loved up</button>
+      <button class="mood-btn" onclick="setMood(this,'😔','Missing you')">😔 Missing you</button>
+      <button class="mood-btn" onclick="setMood(this,'😤','Stressed')">😤 Stressed</button>
+      <button class="mood-btn" onclick="setMood(this,'🤗','Excited')">🤗 Excited</button>
+    </div>
+    <div class="mood-result" id="moodResult"></div>
   </div>
 
-  <div class="menu">
-    <button onclick="go('game.html')">🎮 Games</button>
-    <button onclick="go('video.html')">📹 Video Call</button>
-  </div>
+  <!-- Feature cards -->
+  <div class="grid">
 
+    <div class="card" data-color="video" onclick="openModal('video')">
+      <div class="card-icon">📹</div>
+      <div class="card-title">Video Call</div>
+      <div class="card-desc">Jump into a face-to-face moment. See each other, laugh together, and just be present.</div>
+      <div class="card-action">Start call <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7h8M8 4l3 3-3 3" stroke="#e8647a" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+    </div>
+
+    <div class="card" data-color="questions" onclick="openModal('questions')">
+      <div class="card-icon">💬</div>
+      <div class="card-title">Question Cards</div>
+      <div class="card-desc">Discover each other deeper with fun, thoughtful, and sometimes surprising questions.</div>
+      <div class="card-action">Draw a card <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7h8M8 4l3 3-3 3" stroke="#e8647a" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+    </div>
+
+    <div class="card" data-color="games" onclick="openModal('games')">
+      <div class="card-icon">🎮</div>
+      <div class="card-title">Play Together</div>
+      <div class="card-desc">Mini-games designed for two. Challenge each other and have fun across the miles.</div>
+      <div class="card-action">Browse games <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7h8M8 4l3 3-3 3" stroke="#e8647a" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+    </div>
+
+    <div class="card" data-color="music" onclick="openModal('music')">
+      <div class="card-icon">🎵</div>
+      <div class="card-title">Sync Music</div>
+      <div class="card-desc">Listen to the same song at the same time. Build your couple's playlist together.</div>
+      <div class="card-action">Open player <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7h8M8 4l3 3-3 3" stroke="#e8647a" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+    </div>
+
+    <div class="card" data-color="mood" onclick="openModal('streak')">
+      <div class="card-icon">📅</div>
+      <div class="card-title">Your Streak</div>
+      <div class="card-desc">You've been showing up for each other every single day. Keep the flame alive!</div>
+      <div class="card-action">View history <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7h8M8 4l3 3-3 3" stroke="#e8647a" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+    </div>
+
+  </div>
 </div>
 
-<script src="script.js"></script>
+<!-- ── Modals ── -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
+  <div class="modal" id="modalBox">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
 
 <script>
-// Initialize profile, streak, and load today's answer
-initializeDashboard();
-loadTodayAnswer();
-</script>
+  // Mood
+  function setMood(btn, emoji, label) {
+    document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const messages = {
+      'Happy': "That's wonderful! Sharing this with Priya will make her smile too 🌸",
+      'Loved up': "Aww, go send her a message! She'd love to hear that right now 💕",
+      'Missing you': "Distance is hard. Maybe schedule a call soon? You've got this 🤍",
+      'Stressed': "Take a breath. Talking to Priya might help lighten the load 💛",
+      'Excited': "That energy is contagious! Tell Priya all about it 🎉"
+    };
+    document.getElementById('moodResult').textContent = messages[label] || '';
+  }
 
+  // Modal system
+  const modals = {
+    video: {
+      title: '📹 Video Call',
+      html: `<p>Start an instant video call with Priya. No downloads needed — just click and connect.</p>
+        <button class="modal-btn" onclick="alert('Calling Priya... 💕')">Start Video Call</button>`
+    },
+    questions: {
+      title: '💬 Question of the Moment',
+      get html() {
+        const qs = [
+          "If you could teleport to me right now, what's the first thing you'd do?",
+          "What's a small thing I do that makes you feel most loved?",
+          "Describe our future home in three words.",
+          "What song reminds you of us the most — and why?",
+          "What's a dream trip you want us to take together someday?",
+          "What was the exact moment you knew I was special to you?",
+          "If we could spend a whole day together doing anything, what would it be?",
+          "What's something you've never told me but want me to know?"
+        ];
+        const q = qs[Math.floor(Math.random()*qs.length)];
+        return `<div class="q-box" id="qBox">"${q}"</div>
+          <button class="modal-btn" onclick="shuffleQ()">✨ Next question</button>`;
+      }
+    },
+    games: {
+      title: '🎮 Play Together',
+      html: `<div class="game-list">
+        <div class="game-item" onclick="alert('Loading Would You Rather...')">🤔 Would You Rather</div>
+        <div class="game-item" onclick="alert('Loading Trivia for Two...')">🧠 Trivia for Two</div>
+        <div class="game-item" onclick="alert('Loading Guess the Memory...')">📸 Guess the Memory</div>
+        <div class="game-item" onclick="alert('Loading 20 Questions...')">💡 20 Questions</div>
+      </div>
+      <p style="font-size:0.8rem;color:var(--muted)">More games coming soon!</p>`
+    },
+    music: {
+      title: '🎵 Listening Together',
+      html: `<div class="music-player">
+        <div class="song-name">A Thousand Miles</div>
+        <div class="artist">Vanessa Carlton</div>
+        <div class="progress-bar"><div class="progress-fill"></div></div>
+        <div class="music-controls">
+          <span title="Previous" onclick="">⏮</span>
+          <span title="Play/Pause" onclick="this.textContent = this.textContent==='▶️'?'⏸':'▶️'">⏸</span>
+          <span title="Next" onclick="">⏭</span>
+        </div>
+      </div>
+      <p style="font-size:0.82rem;color:var(--muted)">Priya is listening along with you right now 💕</p>`
+    },
+    streak: {
+      title: '🔥 Your Streak',
+      get html() {
+        const total = 14;
+        let dots = '';
+        for(let i=0;i<21;i++) dots += `<div class="dot ${i < total ? 'filled' : ''}"></div>`;
+        return `<p>You and Priya have checked in together <strong>${total} days in a row</strong>. Amazing! Keep showing up for each other.</p>
+          <div class="streak-dots">${dots}</div>
+          <p style="font-size:0.8rem;color:var(--muted);margin-top:14px;margin-bottom:0">Each dot = one day together 🌸</p>`;
+      }
+    }
+  };
+
+  function openModal(key) {
+    const m = modals[key];
+    document.getElementById('modalContent').innerHTML = `<h2>${m.title}</h2>${m.html}`;
+    document.getElementById('modalOverlay').classList.add('open');
+  }
+  function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); }
+  function closeModalOutside(e) { if(e.target === document.getElementById('modalOverlay')) closeModal(); }
+
+  function shuffleQ() {
+    const qs = [
+      "If you could teleport to me right now, what's the first thing you'd do?",
+      "What's a small thing I do that makes you feel most loved?",
+      "Describe our future home in three words.",
+      "What song reminds you of us the most — and why?",
+      "What's a dream trip you want us to take together someday?",
+      "What was the exact moment you knew I was special to you?",
+      "If we could spend a whole day together doing anything, what would it be?",
+      "What's something you've never told me but want me to know?"
+    ];
+    const q = qs[Math.floor(Math.random()*qs.length)];
+    const box = document.getElementById('qBox');
+    box.style.opacity = 0;
+    setTimeout(() => {
+      box.textContent = `"${q}"`;
+      box.style.opacity = 1;
+    }, 250);
+    box.style.transition = 'opacity 0.25s';
+  }
+</script>
 </body>
 </html>

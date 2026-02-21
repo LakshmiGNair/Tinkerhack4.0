@@ -192,3 +192,198 @@ function loadTodayAnswer() {
         displayMood(this.value);
     });
 }
+
+// --------------------------
+// Pairing / WebRTC DataChannel
+// --------------------------
+let pc = null;
+let dc = null;
+const rtcConfig = {iceServers:[{urls:'stun:stun.l.google.com:19302'}]};
+
+function appendMessage(sender, text) {
+    const div = document.getElementById('partnerMessages');
+    if (!div) return;
+    const p = document.createElement('div');
+    p.textContent = sender + ': ' + text;
+    div.appendChild(p);
+    div.scrollTop = div.scrollHeight;
+}
+
+function setupDataChannel() {
+    if (!dc) return;
+    dc.onopen = () => appendMessage('System', 'Data channel open');
+    dc.onclose = () => appendMessage('System', 'Data channel closed');
+    dc.onmessage = (evt) => {
+        try {
+            const msg = JSON.parse(evt.data);
+            handlePeerMessage(msg);
+        } catch (e) {
+            appendMessage('Partner', evt.data);
+        }
+    };
+}
+
+function handlePeerMessage(msg) {
+    if (!msg || !msg.type) return;
+    switch (msg.type) {
+        case 'chat':
+            appendMessage('Partner', msg.text);
+            showBrowserNotification('New message from partner', msg.text);
+            break;
+        case 'answerSaved':
+            appendMessage('Partner', `Saved: ${msg.text} ${msg.mood || ''}`);
+            showBrowserNotification('Partner saved an answer', msg.text);
+            break;
+        case 'gameChoice':
+            appendMessage('Partner', `Chose: ${msg.choice}`);
+            alert('Partner chose: ' + msg.choice);
+            break;
+        default:
+            appendMessage('Partner', JSON.stringify(msg));
+    }
+}
+
+function showBrowserNotification(title, body) {
+    if (!('Notification' in window)) return;
+    try {
+        if (Notification.permission === 'granted') {
+            new Notification(title, { body });
+        } else if (Notification.permission !== 'denied') {
+            Notification.requestPermission().then(permission => {
+                if (permission === 'granted') new Notification(title, { body });
+            });
+        }
+    } catch (e) {
+        console.warn('Notification error', e);
+    }
+}
+
+async function createPeer(isCaller) {
+    pc = new RTCPeerConnection(rtcConfig);
+    pc.onicecandidate = (e) => {
+        // ICE candidates will be included automatically in typical SDP exchange
+    };
+    pc.oniceconnectionstatechange = () => console.log('ICE', pc.iceConnectionState);
+
+    if (isCaller) {
+        dc = pc.createDataChannel('pair');
+        setupDataChannel();
+    } else {
+        pc.ondatachannel = (e) => {
+            dc = e.channel;
+            setupDataChannel();
+        };
+    }
+
+    return pc;
+}
+
+async function createOffer() {
+    await createPeer(true);
+    const offer = await pc.createOffer();
+    await pc.setLocalDescription(offer);
+    document.getElementById('localSDP').value = JSON.stringify(pc.localDescription);
+}
+
+async function createAnswerFromOffer() {
+    const remote = document.getElementById('remoteSDP').value;
+    if (!remote) return alert('Paste partner offer into the Remote SDP box first.');
+    await createPeer(false);
+    const offerDesc = new RTCSessionDescription(JSON.parse(remote));
+    await pc.setRemoteDescription(offerDesc);
+    const answer = await pc.createAnswer();
+    await pc.setLocalDescription(answer);
+    document.getElementById('localSDP').value = JSON.stringify(pc.localDescription);
+}
+
+async function setRemoteFromTextarea() {
+    const remote = document.getElementById('remoteSDP').value;
+    if (!remote) return alert('Paste partner SDP into the Remote SDP box.');
+    if (!pc) return alert('No peer connection yet. Create offer or answer first.');
+    const desc = new RTCSessionDescription(JSON.parse(remote));
+    await pc.setRemoteDescription(desc);
+    appendMessage('System', 'Remote SDP set');
+}
+
+function sendToPartner(obj) {
+    if (!dc || dc.readyState !== 'open') {
+        appendMessage('System', 'Not connected to partner');
+        return;
+    }
+    dc.send(JSON.stringify(obj));
+}
+
+// Send message from main message box (replaced daily question)
+function sendPartnerFromBox() {
+    const box = document.getElementById('answerBox');
+    if (!box) return;
+    const text = box.value.trim();
+    if (!text) return alert('Please write a message to send.');
+    appendMessage('You', text);
+    if (dc && dc.readyState === 'open') {
+        sendToPartner({ type: 'chat', text });
+    } else {
+        appendMessage('System', 'Message queued locally (partner not connected)');
+    }
+    box.value = '';
+}
+
+// Wire up dashboard buttons if present
+window.addEventListener('load', () => {
+    const createOfferBtn = document.getElementById('createOfferBtn');
+    const createAnswerBtn = document.getElementById('createAnswerBtn');
+    const setRemoteBtn = document.getElementById('setRemoteBtn');
+    const sendPartnerMsg = document.getElementById('sendPartnerMsg');
+
+    if (createOfferBtn) createOfferBtn.onclick = createOffer;
+    if (createAnswerBtn) createAnswerBtn.onclick = createAnswerFromOffer;
+    if (setRemoteBtn) setRemoteBtn.onclick = setRemoteFromTextarea;
+    if (sendPartnerMsg) sendPartnerMsg.onclick = () => {
+        const input = document.getElementById('partnerInput');
+        if (!input || !input.value.trim()) return;
+        appendMessage('You', input.value);
+        sendToPartner({type:'chat', text: input.value});
+        input.value = '';
+    };
+});
+
+// Send saved answer to partner when available
+const _saveAnswer = saveAnswer;
+saveAnswer = function() {
+    const answerBox = document.getElementById("answerBox");
+    const answer = answerBox.value;
+    if (!answer.trim()) {
+        alert("Please write something!");
+        return;
+    }
+
+    const today = new Date().toDateString();
+    let userData = JSON.parse(localStorage.getItem("userData")) || {};
+
+    if (!userData.dailyAnswers) {
+        userData.dailyAnswers = {};
+    }
+
+    const mood = analyzeMood(answer);
+    userData.dailyAnswers[today] = {
+        text: answer,
+        mood: mood.emoji,
+        timestamp: new Date().toLocaleTimeString()
+    };
+
+    localStorage.setItem("userData", JSON.stringify(userData));
+    answerBox.value = "";
+    document.getElementById("moodDisplay").innerHTML = "";
+    alert("Answer saved! Mood: " + mood.emoji);
+
+    if (dc && dc.readyState === 'open') {
+        sendToPartner({type:'answerSaved', text: userData.dailyAnswers[today].text, mood: mood.emoji, timestamp: userData.dailyAnswers[today].timestamp});
+    }
+};
+
+// Helper for game page to send choice
+function sendGameChoice(choice) {
+    if (dc && dc.readyState === 'open') {
+        sendToPartner({type:'gameChoice', choice});
+    }
+}
