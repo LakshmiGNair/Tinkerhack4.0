@@ -3,18 +3,64 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard</title>
+  <title>Dashboard ❤️</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<h1>Welcome ❤️</h1>
+<!-- Header with Streak and Profile -->
+<div class="dashboard-header">
+  <div class="streak-section">
+    <span class="streak-flame">🔥</span>
+    <span class="streak-number" id="streakCount">0</span>
+  </div>
+  
+  <button class="profile-btn" onclick="showProfile()">👤 Profile</button>
+</div>
 
-<div class="menu">
-  <button onclick="go('game.html')">🎮 Games</button>
-  <button onclick="go('video.html')">📹 Video Call</button>
+<!-- Profile Modal -->
+<div id="profileModal" class="profile-modal">
+  <div class="profile-content">
+    <button class="profile-close" onclick="closeProfile()">✕</button>
+    <h2>User Profile</h2>
+    <p><strong>Name:</strong> <span id="profileName">User</span></p>
+    <p><strong>Email:</strong> <span id="profileEmail"></span></p>
+    <p><strong>Streak:</strong> <span id="profileStreak">0</span> days</p>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- Daily Question Section -->
+  <div class="question-section">
+    <h2 class="question-title">How are you today? 💭</h2>
+    <div class="answer-input-wrapper">
+      <textarea 
+        id="answerBox" 
+        class="answer-box" 
+        placeholder="Share your feelings, thoughts, or how your day went...">
+      </textarea>
+      <button class="save-btn" onclick="saveAnswer()">Send ➤</button>
+    </div>
+    <div id="moodDisplay" class="mood-display"></div>
+  </div>
+
+  <div class="menu">
+    <button onclick="go('game.html')">🎮 Games</button>
+    <button onclick="go('video.html')">📹 Video Call</button>
+  </div>
+
 </div>
 
 <script src="script.js"></script>
+
+<script>
+// Initialize profile, streak, and load today's answer
+initializeDashboard();
+loadTodayAnswer();
+</script>
+
 </body>
 </html>

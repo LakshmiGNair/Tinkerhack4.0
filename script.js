@@ -1,255 +1,194 @@
-const songs = [
-    "songs/song1.mp3",
-    "songs/song2.mp3",
-    "songs/song3.mp3",
-    "songs/song4.mp3",
-    "songs/song5.mp3"
-];
-
-// Store custom songs
-let customSongs = [];
-
-// Handle Login
-function handleLogin(event) {
-    event.preventDefault();
+function analyzeMood(text) {
+    const lowerText = text.toLowerCase();
     
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-    
-    // Basic validation (email must have @ and password must be at least 6 characters)
-    if (!email.includes("@")) {
-        alert("Please enter a valid email address");
-        return;
-    }
-    
-    if (password.length < 6) {
-        alert("Password must be at least 6 characters long");
-        return;
-    }
-    
-    // Get existing user data or create new
-    let userData = JSON.parse(localStorage.getItem("bondifyUser")) || {};
-    
-    // Update user info
-    userData.email = email;
-    userData.lastLogin = new Date().toLocaleDateString();
-    
-    // Calculate streak
-    if (!userData.accountCreated) {
-        userData.accountCreated = new Date().toLocaleDateString();
-        userData.streak = 1;
-        userData.lastAccessDate = new Date().toDateString();
-    } else {
-        const today = new Date().toDateString();
-        const lastAccess = userData.lastAccessDate;
-        
-        if (today !== lastAccess) {
-            const today = new Date();
-            const last = new Date(lastAccess);
-            const diffTime = today - last;
-            const diffDays = diffTime / (1000 * 60 * 60 * 24);
-            
-            if (diffDays === 1) {
-                userData.streak = (userData.streak || 1) + 1;
-            } else if (diffDays > 1) {
-                userData.streak = 1;
-            }
-            userData.lastAccessDate = today.toDateString();
+    const moods = {
+        happy: {
+            keywords: ['happy', 'great', 'amazing', 'wonderful', 'excellent', 'fantastic', 'love', 'blessed', 'grateful', 'excited', 'thrilled', 'joyful', 'perfect', 'awesome'],
+            emoji: '😊',
+            color: '#FFD700'
+        },
+        sad: {
+            keywords: ['sad', 'unhappy', 'depressed', 'blue', 'down', 'lonely', 'miserable', 'terrible', 'awful', 'broken', 'crying', 'hurt', 'pain', 'hopeless'],
+            emoji: '😢',
+            color: '#4169E1'
+        },
+        stressed: {
+            keywords: ['stressed', 'anxious', 'worried', 'nervous', 'overwhelmed', 'busy', 'hectic', 'frantic', 'pressured', 'tense', 'nervous'],
+            emoji: '😰',
+            color: '#FF6347'
+        },
+        angry: {
+            keywords: ['angry', 'mad', 'furious', 'irritated', 'annoyed', 'frustrated', 'rage', 'hate', 'upset'],
+            emoji: '😠',
+            color: '#DC143C'
+        },
+        calm: {
+            keywords: ['calm', 'peaceful', 'relaxed', 'serene', 'content', 'quiet', 'meditative', 'chilled', 'mellow', 'cool'],
+            emoji: '😌',
+            color: '#98FB98'
+        },
+        tired: {
+            keywords: ['tired', 'exhausted', 'drained', 'sleepy', 'fatigued', 'weary', 'worn out', 'beat'],
+            emoji: '😴',
+            color: '#778899'
+        },
+        excited: {
+            keywords: ['excited', 'pumped', 'hyped', 'can\'t wait', 'looking forward', 'stoked', 'thrilled', 'over the moon'],
+            emoji: '🤩',
+            color: '#FF69B4'
         }
-    }
-    
-    // Store user data
-    localStorage.setItem("bondifyUser", JSON.stringify(userData));
-    
-    // Hide login page and show main content
-    document.getElementById("loginPage").classList.add("hidden");
-    document.getElementById("mainContent").classList.add("show");
-    
-    // Update header with streak
-    updateStreak();
-    
-    alert("Welcome to Bondify! \u2764\ufe0f");
-}
-
-// Update streak display
-function updateStreak() {
-    const userData = JSON.parse(localStorage.getItem("bondifyUser"));
-    if (userData) {
-        document.getElementById("streakCount").textContent = userData.streak || 0;
-    }
-}
-
-// Show profile modal
-function showProfile() {
-    const userData = JSON.parse(localStorage.getItem("bondifyUser"));
-    if (userData) {
-        document.getElementById("profileEmail").textContent = userData.email;
-        document.getElementById("profileStreak").textContent = userData.streak || 0;
-        document.getElementById("accountCreated").textContent = userData.accountCreated || "Not set";
-        document.getElementById("lastLogin").textContent = userData.lastLogin || "Not set";
-    }
-    document.getElementById("profileModal").classList.add("show");
-}
-
-// Close profile modal
-function closeProfile() {
-    document.getElementById("profileModal").classList.remove("show");
-}
-
-// Logout function
-function logout() {
-    localStorage.removeItem("bondifyUser");
-    document.getElementById("mainContent").classList.remove("show");
-    document.getElementById("loginPage").classList.remove("hidden");
-    document.getElementById("profileModal").classList.remove("show");
-    document.getElementById("email").value = "";
-    document.getElementById("password").value = "";
-    alert("Logged out successfully!");
-}
-
-function showMusic() {
-    document.getElementById("musicSection").style.display = "block";
-}
-
-function closeMusic() {
-    document.getElementById("musicSection").style.display = "none";
-}
-
-function showGames() {
-    document.getElementById("gamesSection").style.display = "block";
-}
-
-function closeGames() {
-    document.getElementById("gamesSection").style.display = "none";
-}
-
-function answerGame(answer) {
-    if (answer === 'me') {
-        alert('Cute 😄');
-    } else {
-        alert('Aww 😍');
-    }
-}
-
-function playSong(index) {
-    const player = document.getElementById("player");
-    player.src = songs[index];
-    player.play();
-}
-
-function downloadCurrentSong() {
-    const player = document.getElementById("player");
-    const songSrc = player.src;
-    
-    if (!songSrc) {
-        alert("Please play a song first!");
-        return;
-    }
-    
-    // Create a temporary link element
-    const link = document.createElement("a");
-    link.href = songSrc;
-    
-    // Determine the song name
-    let songName = "song";
-    
-    // Check if it's a custom song
-    const customSong = customSongs.find(s => s.url === songSrc);
-    if (customSong) {
-        songName = customSong.name;
-    } else {
-        // Use index-based naming for default songs
-        const songIndex = songs.indexOf(songSrc);
-        const songTitles = ["Perfect", "Until-I-Found-You", "All-of-Me", "Love-Me-Like-You-Do", "Tum-Hi-Ho"];
-        if (songIndex !== -1 && songTitles[songIndex]) {
-            songName = songTitles[songIndex];
-        }
-    }
-    
-    link.download = songName + ".mp3";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    
-    alert("Download started: " + songName + ".mp3");
-}
-
-function addCustomSong() {
-    const fileInput = document.getElementById("songFile");
-    const file = fileInput.files[0];
-    
-    if (!file) {
-        alert("Please select a song file");
-        return;
-    }
-    
-    // Create a blob URL for the selected file
-    const songURL = URL.createObjectURL(file);
-    const songName = file.name.replace(/\.[^/.]+$/, ""); // Remove file extension
-    
-    // Add to custom songs
-    customSongs.push({ name: songName, url: songURL });
-    
-    // Create and add button for the new song
-    const songListDiv = document.querySelector(".song-list");
-    const newButton = document.createElement("button");
-    newButton.textContent = "🎵 " + songName;
-    newButton.onclick = function() {
-        const player = document.getElementById("player");
-        player.src = songURL;
-        player.play();
     };
-    songListDiv.appendChild(newButton);
     
-    // Clear the file input
-    fileInput.value = "";
-    alert("Song added: " + songName);
+    let detectedMood = null;
+    let maxMatches = 0;
+    
+    for (let mood in moods) {
+        const matches = moods[mood].keywords.filter(keyword => lowerText.includes(keyword)).length;
+        if (matches > maxMatches) {
+            maxMatches = matches;
+            detectedMood = mood;
+        }
+    }
+    
+    if (detectedMood) {
+        return moods[detectedMood];
+    }
+    
+    return {
+        emoji: '🤔',
+        color: '#9370DB',
+        mood: 'thoughtful'
+    };
 }
 
-// Create floating love emojis with varied animations
-function createFloatingEmoji() {
-    const emoji = document.createElement('div');
-    emoji.classList.add('floating-emoji');
-    
-    // More red heart emojis and more frequent
-    const emojis = ['❤️', '❤️', '❤️', '💕', '💖', '💗', '💝'];
-    emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-    
-    // Random animation type
-    const animations = ['', 'sway-left', 'sway-right', 'diagonal', 'spin'];
-    const randomAnimation = animations[Math.floor(Math.random() * animations.length)];
-    if (randomAnimation) {
-        emoji.classList.add(randomAnimation);
+// DISPLAY MOOD ANALYZER
+function displayMood(text) {
+    const moodDisplay = document.getElementById('moodDisplay');
+    if (!text.trim()) {
+        moodDisplay.innerHTML = '';
+        return;
     }
     
-    emoji.style.left = Math.random() * 100 + '%';
-    const duration = Math.random() * 4 + 6;
-    emoji.style.animationDuration = duration + 's';
-    
-    // Vary emoji size
-    emoji.style.fontSize = (Math.random() * 30 + 30) + 'px';
-    
-    document.body.appendChild(emoji);
-    
-    setTimeout(() => {
-        emoji.remove();
-    }, duration * 1000);
+    const mood = analyzeMood(text);
+    moodDisplay.innerHTML = `<span style="font-size: 24px; margin-left: 10px;">${mood.emoji}</span>`;
 }
 
-// Start creating emojis on page load
-window.addEventListener('load', () => {
-    // Check if user is already logged in
-    const user = localStorage.getItem("bondifyUser");
-    if (user) {
-        document.getElementById("loginPage").classList.add("hidden");
-        document.getElementById("mainContent").classList.add("show");
-        updateStreak();
-    }
+// LOGIN FUNCTION
+function login(event) {
+    event.preventDefault();
+
+    const email = document.getElementById("email").value;
+
+    localStorage.setItem("email", email);
+
+    window.location.href = "dashboard.html";
+}
+
+// NAVIGATION
+function go(page) {
+    window.location.href = page;
+}
+
+// INITIALIZE DASHBOARD
+function initializeDashboard() {
+    const userData = JSON.parse(localStorage.getItem("userData")) || {};
+    const email = localStorage.getItem("email");
     
-    // Create initial batch of hearts
-    for (let i = 0; i < 5; i++) {
-        setTimeout(() => createFloatingEmoji(), i * 200);
+    if (!email) {
+        window.location.href = "index.html";
+        return;
     }
-    // Then continue creating hearts regularly
-    setInterval(createFloatingEmoji, 600);
-});
+
+    document.getElementById("profileName").textContent = userData.name || "User";
+    document.getElementById("profileEmail").textContent = email;
+
+    const today = new Date().toDateString();
+    let userData2 = JSON.parse(localStorage.getItem("userData")) || {};
+
+    if (!userData2.firstLogin) {
+        userData2.firstLogin = today;
+        userData2.lastLogin = today;
+        userData2.streak = 1;
+    } else {
+        const lastLogin = new Date(userData2.lastLogin);
+        const currentDate = new Date();
+        const diffTime = currentDate - lastLogin;
+        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+        if (diffDays === 1) {
+            userData2.streak = (userData2.streak || 0) + 1;
+        } else if (diffDays > 1) {
+            userData2.streak = 1;
+        }
+
+        userData2.lastLogin = today;
+    }
+
+    localStorage.setItem("userData", JSON.stringify(userData2));
+    document.getElementById("streakCount").textContent = userData2.streak;
+    document.getElementById("profileStreak").textContent = userData2.streak;
+}
+
+// PROFILE MODAL
+function showProfile() {
+    document.getElementById("profileModal").style.display = "block";
+}
+
+function closeProfile() {
+    document.getElementById("profileModal").style.display = "none";
+}
+
+// LOGOUT FUNCTION
+function logout() {
+    localStorage.removeItem("email");
+    localStorage.removeItem("userData");
+    window.location.href = "index.html";
+}
+
+// SAVE ANSWER WITH MOOD ANALYSIS
+function saveAnswer() {
+    const answerBox = document.getElementById("answerBox");
+    const answer = answerBox.value;
+    
+    if (!answer.trim()) {
+        alert("Please write something!");
+        return;
+    }
+
+    const today = new Date().toDateString();
+    let userData = JSON.parse(localStorage.getItem("userData")) || {};
+
+    if (!userData.dailyAnswers) {
+        userData.dailyAnswers = {};
+    }
+
+    const mood = analyzeMood(answer);
+    userData.dailyAnswers[today] = {
+        text: answer,
+        mood: mood.emoji,
+        timestamp: new Date().toLocaleTimeString()
+    };
+
+    localStorage.setItem("userData", JSON.stringify(userData));
+    answerBox.value = "";
+    document.getElementById("moodDisplay").innerHTML = "";
+    alert("Answer saved! Mood: " + mood.emoji);
+}
+
+// LOAD TODAY'S ANSWER
+function loadTodayAnswer() {
+    const today = new Date().toDateString();
+    const userData = JSON.parse(localStorage.getItem("userData")) || {};
+
+    if (userData.dailyAnswers && userData.dailyAnswers[today]) {
+        const todayAnswer = userData.dailyAnswers[today];
+        document.getElementById("answerBox").value = todayAnswer.text;
+        displayMood(todayAnswer.text);
+    }
+
+    // Add real-time mood display on input
+    const answerBox = document.getElementById("answerBox");
+    answerBox.addEventListener("input", function() {
+        displayMood(this.value);
+    });
+}

@@ -1,318 +1,133 @@
 body {
   margin: 0;
   font-family: 'Poppins', sans-serif;
-
-  background: linear-gradient(-45deg, #ff758c, #ff7eb3, #ffb199, #ff6a88);
-  background-size: 400% 400%;
-  animation: gradientBG 10s ease infinite;
-
+  background: linear-gradient(135deg, #ff9a9e, #fad0c4);
   height: 100vh;
-  width: 100%;
-}
-
-@keyframes gradientBG {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-/* Login Page Styles */
-.login-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  width: 100%;
-  z-index: 50;
-  background: linear-gradient(-45deg, #ff758c, #ff7eb3, #ffb199, #ff6a88);
-  background-size: 400% 400%;
-  animation: gradientBG 10s ease infinite;
-  visibility: visible;
-  opacity: 1;
-  transition: opacity 0.3s, visibility 0.3s;
 }
 
-.login-container.hidden {
-  visibility: hidden;
-  opacity: 0;
-  z-index: 0;
+
+/* LOGIN */
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 }
 
 .login-box {
-  background: rgba(255, 255, 255, 0.1);
-  padding: 50px;
-  border-radius: 30px;
-  -webkit-backdrop-filter: blur(20px);
-  backdrop-filter: blur(20px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-  max-width: 400px;
-  width: 100%;
+  background: rgba(255,255,255,0.2);
+  padding: 40px;
+  border-radius: 20px;
+  -webkit-backdrop-filter: blur(15px);
+  backdrop-filter: blur(15px);
+  text-align: center;
+  width: 350px;
 }
 
 .login-title {
-  font-family: 'Dancing Script', cursive;
-  font-size: 3rem;
+  font-size: 2.5rem;
   color: white;
-  text-shadow: 0 0 20px #fff, 0 0 40px #ff4da6, 0 0 60px #ff1493;
-  margin: 0 0 10px 0;
 }
 
 .login-subtitle {
   color: white;
-  font-size: 14px;
-  margin: 0 0 30px 0;
-  opacity: 0.9;
+  margin-bottom: 20px;
 }
 
-.form-group {
-  margin: 20px 0;
-}
-
-.form-group label {
+input {
   display: block;
-  color: white;
-  margin-bottom: 8px;
-  font-weight: 600;
-}
-
-.form-group input {
   width: 100%;
+  margin: 15px 0;
   padding: 12px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
-  font-size: 16px;
-  box-sizing: border-box;
-  transition: 0.3s;
-}
-
-.form-group input::placeholder {
-  color: rgba(255, 255, 255, 0.6);
-}
-
-.form-group input:focus {
-  outline: none;
-  border-color: rgba(255, 255, 255, 0.8);
-  background: rgba(255, 255, 255, 0.3);
-  box-shadow: 0 0 20px rgba(255, 105, 180, 0.5);
+  border: none;
 }
 
 .login-btn {
   width: 100%;
   padding: 12px;
-  margin-top: 20px;
-  background: linear-gradient(135deg, #ff6b9d, #ff1493);
-  color: white;
   border: none;
   border-radius: 10px;
+  background: #ff4d6d;
+  color: white;
   font-size: 16px;
-  font-weight: bold;
   cursor: pointer;
-  transition: 0.3s;
 }
 
-.login-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(255, 105, 180, 0.6);
-}
 
-.login-btn:active {
-  transform: translateY(0);
-}
-
-.main-content {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  height: 100%;
-  padding-top: 100px;
-  overflow-y: auto;
-  z-index: 1;
-  background: linear-gradient(-45deg, #ff758c, #ff7eb3, #ffb199, #ff6a88);
-  background-size: 400% 400%;
-  animation: gradientBG 10s ease infinite;
-  visibility: hidden;
-  opacity: 0;
-  transition: opacity 0.3s, visibility 0.3s;
-}
-
-.main-content.show {
-  visibility: visible;
-  opacity: 1;
-  z-index: 10;
-}
-
+/* DASHBOARD */
 
 .container {
   text-align: center;
   color: white;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
 }
 
 .title {
-  font-family: 'Dancing Script', cursive;
-  font-size: 6rem;
-  text-shadow: 0 0 20px #fff, 0 0 40px #ff4da6, 0 0 60px #ff1493;
-  margin: 0;
-  letter-spacing: 3px;
-  font-weight: bold;
+  font-size: 3rem;
 }
 
-.subtitle {
-  display: none;
-  margin-bottom: 30px;
-}
-
-.grid {
-  display: none;
-  grid-template-columns: repeat(2, 200px);
-  gap: 20px;
-  justify-content: center;
-}
-
-.card {
-  background: rgba(255, 255, 255, 0.15);
-  padding: 30px;
-  border-radius: 20px;
-  cursor: pointer;
-  -webkit-backdrop-filter: blur(15px);
-  backdrop-filter: blur(15px);
-  transition: 0.3s;
-}
-
-.card:hover {
-  transform: scale(1.1);
-  box-shadow: 0 0 20px rgba(255,255,255,0.8);
-}
-
-.audio-player {
-  width: 100%;
-  margin: 20px 0;
-}
-
-.download-section {
-  margin: 15px 0;
-}
-
-.download-btn {
-  display: inline-block;
-  margin: 5px;
-  padding: 10px 20px;
-  background: white;
+.menu button {
+  margin: 15px;
+  padding: 15px 25px;
   border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.download-btn:hover {
-  background: #FFB6D9;
-  transform: scale(1.05);
-}
-
-.add-song-section {
-  margin: 20px 0;
-}
-
-.add-song-label {
-  font-size: 16px;
-  margin: 10px 0;
-}
-
-#songFile {
-  padding: 10px;
-  margin: 10px 0;
-}
-
-.add-song-btn {
-  display: inline-block;
-  margin: 10px;
-  padding: 10px 20px;
-  background: white;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.add-song-btn:hover {
-  background: #FFB6D9;
-  transform: scale(1.05);
-}
-
-.quiz-question {
+  border-radius: 15px;
+  background: rgba(255,255,255,0.2);
+  color: white;
   font-size: 18px;
-  margin: 20px 0;
-}
-
-.quiz-btn {
-  display: inline-block;
-  margin: 10px;
-  padding: 10px 20px;
-  background: white;
-  border: none;
-  border-radius: 10px;
   cursor: pointer;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   transition: 0.3s;
 }
 
-.quiz-btn:hover {
-  background: #FFB6D9;
-  transform: scale(1.05);
+.menu button:hover {
+  transform: scale(1.1);
 }
 
-/* Header Styles */
-.app-header {
+/* DASHBOARD HEADER */
+.dashboard-header {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
+  height: 70px;
   background: rgba(255, 255, 255, 0.1);
   -webkit-backdrop-filter: blur(15px);
   backdrop-filter: blur(15px);
-  padding: 20px 40px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 0 40px;
   z-index: 100;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.streak-container {
+.streak-section {
   display: flex;
   align-items: center;
   gap: 10px;
-  color: white;
-  font-size: 20px;
-  font-weight: bold;
-}
-
-.streak-label {
   font-size: 24px;
 }
 
-.streak-count {
-  background: linear-gradient(135deg, #ff6b9d, #ff1493);
+.streak-flame {
+  font-size: 28px;
+}
+
+.streak-number {
+  background: linear-gradient(135deg, #ff9a9e, #fad0c4);
   padding: 5px 15px;
   border-radius: 20px;
+  color: white;
+  font-weight: bold;
   font-size: 18px;
 }
 
 .profile-btn {
-  background: linear-gradient(135deg, #ff6b9d, #ff1493);
+  background: linear-gradient(135deg, #ff9a9e, #fad0c4);
   color: white;
   border: none;
   padding: 10px 25px;
@@ -325,14 +140,10 @@ body {
 
 .profile-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 105, 180, 0.5);
+  box-shadow: 0 6px 20px rgba(255, 154, 158, 0.5);
 }
 
-.profile-btn:active {
-  transform: translateY(0);
-}
-
-/* Profile Modal */
+/* PROFILE MODAL */
 .profile-modal {
   display: none;
   position: fixed;
@@ -351,7 +162,7 @@ body {
 }
 
 .profile-content {
-  background: rgba(255, 255, 255, 0.95);
+  background: white;
   padding: 40px;
   border-radius: 20px;
   max-width: 400px;
@@ -377,42 +188,121 @@ body {
 }
 
 .profile-content h2 {
-  margin: 0 0 30px 0;
-  color: #333;
+  margin: 0 0 20px 0;
   text-align: center;
-  font-size: 24px;
-}
-
-.profile-info {
-  margin: 20px 0;
-  text-align: left;
-}
-
-.profile-info p {
-  margin: 15px 0;
-  color: #555;
-  font-size: 16px;
-}
-
-.profile-info strong {
   color: #333;
+}
+
+.profile-content p {
+  margin: 15px 0;
+  font-size: 16px;
+  color: #555;
 }
 
 .logout-btn {
   width: 100%;
   padding: 12px;
-  margin-top: 30px;
-  background: linear-gradient(135deg, #ff6b9d, #ff1493);
+  margin-top: 20px;
+  background: linear-gradient(135deg, #ff9a9e, #fad0c4);
   color: white;
   border: none;
   border-radius: 10px;
   font-size: 16px;
   font-weight: bold;
   cursor: pointer;
-  transition: 0.3s;
+  transition: all 0.3s;
 }
 
 .logout-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 105, 180, 0.5);
+  box-shadow: 0 6px 20px rgba(255, 154, 158, 0.5);
+}
+
+/* Add top padding to container for header */
+.container {
+  margin-top: 70px;
+}
+
+/* DAILY QUESTION SECTION */
+.question-section {
+  background: rgba(255, 255, 255, 0.15);
+  -webkit-backdrop-filter: blur(15px);
+  backdrop-filter: blur(15px);
+  padding: 40px;
+  border-radius: 20px;
+  max-width: 90%;
+  width: 90%;
+  margin: 40px auto;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.question-title {
+  color: white;
+  font-size: 24px;
+  margin: 0 0 20px 0;
+  font-weight: 600;
+}
+
+.answer-box {
+  width: 100%;
+  min-height: 50px;
+  padding: 15px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  font-family: 'Poppins', sans-serif;
+  font-size: 16px;
+  resize: vertical;
+  box-sizing: border-box;
+  transition: all 0.3s;
+}
+
+.answer-box::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.answer-box:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.6);
+  box-shadow: 0 0 20px rgba(255, 154, 158, 0.3);
+}
+
+.answer-input-wrapper {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+}
+
+.save-btn {
+  background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 15px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  min-width: max-content;
+  transition: all 0.3s;
+  white-space: nowrap;
+}
+
+.save-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 154, 158, 0.5);
+}
+
+.save-btn:active {
+  transform: translateY(0);
+}
+
+.mood-display {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 24px;
+  min-height: 30px;
+  transition: all 0.3s ease;
 }
