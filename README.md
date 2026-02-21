@@ -3,15 +3,15 @@
   <img src="./img.png" alt="Project Banner" width="100%">
 </p>
 
-# [Project Name] 🎯
+# BONDIFY 🎯
 
 ## Basic Details
 
-### Team Name: [Name]
+### Team Name:Mean Girls
 
 ### Team Members
-- Member 1: [Name] - [College]
-- Member 2: [Name] - [College]
+- Member 1: Lakshmi G Nair -College of Engineering Attingal
+- Member 2: Vaishnavi B- College of Engineering Attingal
 
 ### Hosted Project Link
 [mention your project hosted link here]
